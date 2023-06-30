@@ -10,6 +10,7 @@ const rockSchema = new mongoose.Schema({
         state: String,
         country: String
     },
+    image: String,
     description: String
 });
 
