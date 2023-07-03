@@ -1,0 +1,10 @@
+#footer {
+    background-color: rgba(181, 182, 187, 0.5);
+
+}
+
+#footer p {
+    font-family: 'Montserrat', sans-serif;
+    padding-top: 2px;
+    margin: 0 auto;
+}

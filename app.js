@@ -39,10 +39,18 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
+
 app.get('/index', async (req, res) => {
-    const rocks = await Rock.find({});
-    res.render('index', { rocks });
+    const page = parseInt(req.query.page) || 1; // reg.query.page is the page number in the url. This is used to set the page number in the pagination.
+    const limit = parseInt(req.query.limit) || 20; // reg.query.limit is the limit number in the url. This is used to set the limit number in the pagination.
+
+    const skip = (page - 1) * limit; // skip is used to skip the number of documents in the database. This is used to set the page number in the pagination.
+
+    const rocks = await Rock.find({}).skip(skip).limit(limit);
+
+    res.render('index', { rocks, page, limit });
 });
+
 
 
 app.listen(3000, () => {

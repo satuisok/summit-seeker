@@ -1,0 +1,17 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.card-background.container-fluid {
+    background-color: rgba(154, 114, 96, 0.5);
+}
+
+div.card {
+    padding: 0;
+    margin: 1rem;
+    max-width: 500px;
+}
+
+.btn.btn-link {
+    margin: 0 1rem 1rem 1rem;
+}

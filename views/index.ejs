@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/index.css">
   <title>Index</title>
 </head>
 
@@ -18,21 +19,47 @@
   <main>
 
     <!--index-->
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-8">
-          <h1>View Climbing Spots</h1>
+    <div class="card-background container-fluid">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col">
+            <h1>View Climbing Spots</h1>
+          </div>
+          <div class="row d-flex justify-content-center">
 
-          <% for(let rock of rocks) { %>
-          <div class="card">
-            <img src="<%=rock.image%>" class="card-img-top" alt="">
-            <div class="card-body">
-              <h3 class="card-title"><%=rock.name%></h3>
-              <p class="card-text"><%=rock.location.area%>, <%=rock.location.country%></p>
+            <% for(let rock of rocks) { %>
 
+            <div class="card text-start">
+              <div class="row g-0">
+                <div class="col-md-5">
+                  <img src="<%=rock.image%>" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-7">
+                  <div class="card-body">
+                    <h5 class="card-title"><%=rock.name%></h5>
+                    <p class="card-text"><%=rock.location.area%>, <%=rock.location.country%></p>
+                    <p class="card-text"><%=rock.description.substring(0, 120)%>...</p>
+                    <p class="card-text"><small class="text-body-secondary">Submitted by: Name</small></p>
+                    <a href="#" class="btn btn-sm btn-primary">Go somewhere</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <% } %>
+
+          </div>
+          <div class="row d-flex justify-content-center">
+            <div class="col-12">
+              <% if (page > 1) { %>
+              <a href="/index?page=<%= page - 1 %>&limit=<%= limit %>" class="btn btn-link">Previous</a>
+              <% } %>
+
+              <% if (rocks.length === limit) { %>
+              <a href="/index?page=<%= page + 1 %>&limit=<%= limit %>" class="btn btn-link">Next</a>
+              <% } %>
             </div>
           </div>
-          <% } %>
         </div>
       </div>
     </div>
