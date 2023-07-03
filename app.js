@@ -33,7 +33,7 @@ app.engine('ejs', ejsMate); // set ejs-mate as the layout engine for ejs
 app.set('views', path.join(__dirname, 'views')); // set the path for the views folder
 
 app.use(express.static(path.join(__dirname, 'public'))); // set the path for the public folder
-
+app.use(express.urlencoded({ extended: true })); // use express.urlencoded to parse the form data
 
 app.get('/', (req, res) => {
     res.render('home');
@@ -49,6 +49,20 @@ app.get('/index', async (req, res) => {
     const rocks = await Rock.find({}).skip(skip).limit(limit);
 
     res.render('index', { rocks, page, limit });
+});
+
+app.post('/search', async (req, res) => {
+    const searchQuery = req.body.search;
+    const query = {
+        $or: [
+            { name: { $regex: searchQuery, $options: 'i' } }, // Match name case-insensitively
+            { 'location.area': { $regex: searchQuery, $options: 'i' } }, // Match area case-insensitively
+            { 'location.country': { $regex: searchQuery, $options: 'i' } } // Match country case-insensitively
+        ]
+    };
+
+    const rocks = await Rock.find(query);
+    res.render('search-results', { rocks, searchQuery });
 });
 
 
