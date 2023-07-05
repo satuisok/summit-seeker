@@ -9,9 +9,11 @@ const path = require('path'); // path module is used to set the path for the vie
 const ejsMate = require('ejs-mate'); // ejs-mate is a layout engine for ejs
 const multer = require('multer'); // multer is a node module for file uploads
 const upload = multer({ dest: 'uploads/' }); // set the destination folder for the uploaded files
+
 const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
 const catchAsync = require('./utils/catchAsync'); // catchAsync is used to catch the errors in async functions
 
+const { rockSchema } = require('./joiSchemas'); // joiSchemas is used to validate the form data
 //DB models
 const Rock = require('./models/rocks');
 
@@ -41,6 +43,16 @@ app.use(methodOverride('_method')); // use method-override to override the POST 
 app.get('/', (req, res) => {
     res.render('home');
 });
+
+const validateRock = (req, res, next) => {
+    const { error } = rockSchema.validate(req.body); // validate the form data using the rockSchema
+    if (error) {
+        const msg = error.details.map(el => el.message).join(','); // create a custom error message
+        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
+    } else {
+        next();
+    }
+}
 
 
 app.get('/destination', catchAsync(async (req, res) => {
@@ -72,9 +84,8 @@ app.get('/new', (req, res) => {
     res.render('new');
 });
 
-app.post('/destination', catchAsync(async (req, res) => {
+app.post('/destination', validateRock, catchAsync(async (req, res) => {
     try {
-        if (!req.body.rock) throw new ExpressError('Invalid Data', 400);
         const rock = new Rock(req.body);
         await rock.save();
         res.redirect(`/destination/${rock._id}`);
@@ -98,7 +109,7 @@ app.get('/destination/:id/edit', catchAsync(async (req, res) => {
     res.render('edit', { rock });
 }));
 
-app.put('/destination/:id', catchAsync(async (req, res) => {
+app.put('/destination/:id', validateRock, catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
     res.redirect(`/destination/${rock._id}`);

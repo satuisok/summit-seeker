@@ -38,7 +38,7 @@
           <input class="form-control" type="text" name="rock[location][country]" id="country" value="<%=rock.location.country%>" required>
 
           <label for=" image" class="form-label">Image URL:</label>
-          <input class="form-control" name="image" id="image" type="file" multiple>
+          <input class="form-control" name="rock[image]" id="image" type="text" value="<%=rock.image%>">
 
           <label class="form-label" for="description">Description:</label>
           <textarea class="form-control" name="rock[description]" id="description" cols="20" rows="6"><%=rock.description%></textarea>
