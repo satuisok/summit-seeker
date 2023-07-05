@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const app = express();
+const methodOverride = require('method-override'); // method-override is used to override the POST method in the form to PUT method
 const path = require('path'); // path module is used to set the path for the views folder
 const ejsMate = require('ejs-mate'); // ejs-mate is a layout engine for ejs
 const multer = require('multer'); // multer is a node module for file uploads
@@ -34,13 +35,14 @@ app.set('views', path.join(__dirname, 'views')); // set the path for the views f
 
 app.use(express.static(path.join(__dirname, 'public'))); // set the path for the public folder
 app.use(express.urlencoded({ extended: true })); // use express.urlencoded to parse the form data
+app.use(methodOverride('_method')); // use method-override to override the POST method in the form to PUT method
 
 app.get('/', (req, res) => {
     res.render('home');
 });
 
 
-app.get('/index', async (req, res) => {
+app.get('/destination', async (req, res) => {
     const page = parseInt(req.query.page) || 1; // reg.query.page is the page number in the url. This is used to set the page number in the pagination.
     const limit = parseInt(req.query.limit) || 20; // reg.query.limit is the limit number in the url. This is used to set the limit number in the pagination.
 
@@ -63,6 +65,41 @@ app.post('/search', async (req, res) => {
 
     const rocks = await Rock.find(query);
     res.render('search-results', { rocks, searchQuery });
+});
+
+app.get('/new', (req, res) => {
+    res.render('new');
+});
+
+app.post('/destination', async (req, res) => {
+    const rock = new Rock(req.body);
+    await rock.save();
+    res.redirect(`/destination/${rock._id}`);
+});
+
+app.get('/destination/:id', async (req, res) => {
+    const id = req.params.id;
+    const rock = await Rock.findById(id);
+    console.log(rock);
+    res.render('show', { rock })
+});
+
+app.get('/destination/:id/edit', async (req, res) => {
+    const id = req.params.id;
+    const rock = await Rock.findById(id);
+    res.render('edit', { rock });
+});
+
+app.put('/destination/:id', async (req, res) => {
+    const id = req.params.id;
+    const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
+    res.redirect(`/destination/${rock._id}`);
+});
+
+app.delete('/destination/:id', async (req, res) => {
+    const id = req.params.id;
+    const deletedRock = await Rock.findByIdAndDelete(id);
+    res.redirect('/destination');
 });
 
 

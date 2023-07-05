@@ -27,7 +27,7 @@
               <input type="text" class="form-control" id="search" name="search" placeholder="Search by Name, Area or Country">
             </div>
             <div class="col-sm-3">
-              <button type="submit" class="btn btn-sm btn-success">Submit</button>
+              <button type="submit" class="btn btn-sm btn-success">Search</button>
             </div>
           </div>
 
@@ -59,7 +59,7 @@
                     <p class="card-text"><%=rock.location.area%>, <%=rock.location.country%></p>
                     <p class="card-text"><%=rock.description.substring(0, 120)%>...</p>
                     <p class="card-text"><small class="text-body-secondary">Submitted by: Name</small></p>
-                    <a href="#" class="btn btn-sm btn-primary">Go somewhere</a>
+                    <a href="/destination/<%=rock._id%>" class="btn btn-sm btn-primary">View</a>
                   </div>
                 </div>
               </div>
