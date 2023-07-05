@@ -9,7 +9,8 @@ const path = require('path'); // path module is used to set the path for the vie
 const ejsMate = require('ejs-mate'); // ejs-mate is a layout engine for ejs
 const multer = require('multer'); // multer is a node module for file uploads
 const upload = multer({ dest: 'uploads/' }); // set the destination folder for the uploaded files
-
+const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
+const catchAsync = require('./utils/catchAsync'); // catchAsync is used to catch the errors in async functions
 
 //DB models
 const Rock = require('./models/rocks');
@@ -42,7 +43,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/destination', async (req, res) => {
+app.get('/destination', catchAsync(async (req, res) => {
     const page = parseInt(req.query.page) || 1; // reg.query.page is the page number in the url. This is used to set the page number in the pagination.
     const limit = parseInt(req.query.limit) || 20; // reg.query.limit is the limit number in the url. This is used to set the limit number in the pagination.
 
@@ -51,9 +52,9 @@ app.get('/destination', async (req, res) => {
     const rocks = await Rock.find({}).skip(skip).limit(limit);
 
     res.render('index', { rocks, page, limit });
-});
+}));
 
-app.post('/search', async (req, res) => {
+app.post('/search', catchAsync(async (req, res) => {
     const searchQuery = req.body.search;
     const query = {
         $or: [
@@ -65,41 +66,58 @@ app.post('/search', async (req, res) => {
 
     const rocks = await Rock.find(query);
     res.render('search-results', { rocks, searchQuery });
-});
+}));
 
 app.get('/new', (req, res) => {
     res.render('new');
 });
 
-app.post('/destination', async (req, res) => {
-    const rock = new Rock(req.body);
-    await rock.save();
-    res.redirect(`/destination/${rock._id}`);
-});
+app.post('/destination', catchAsync(async (req, res) => {
+    try {
+        if (!req.body.rock) throw new ExpressError('Invalid Data', 400);
+        const rock = new Rock(req.body);
+        await rock.save();
+        res.redirect(`/destination/${rock._id}`);
+    }
+    catch (e) {
+        next(e);
+    }
 
-app.get('/destination/:id', async (req, res) => {
+}));
+
+app.get('/destination/:id', catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findById(id);
     console.log(rock);
     res.render('show', { rock })
-});
+}));
 
-app.get('/destination/:id/edit', async (req, res) => {
+app.get('/destination/:id/edit', catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findById(id);
     res.render('edit', { rock });
-});
+}));
 
-app.put('/destination/:id', async (req, res) => {
+app.put('/destination/:id', catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
     res.redirect(`/destination/${rock._id}`);
-});
+}));
 
-app.delete('/destination/:id', async (req, res) => {
+app.delete('/destination/:id', catchAsync(async (req, res) => {
     const id = req.params.id;
     const deletedRock = await Rock.findByIdAndDelete(id);
     res.redirect('/destination');
+}));
+
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404));
+});
+
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Oh No, Something Went Wrong!';
+    res.status(statusCode).render('error', { err });
 });
 
 
