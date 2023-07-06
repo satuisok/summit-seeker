@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+const Route = require('./routes');
+const Review = require('./reviews');
+const Schema = mongoose.Schema;
 
-const rockSchema = new mongoose.Schema({
+const rockSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -11,8 +14,38 @@ const rockSchema = new mongoose.Schema({
         country: String
     },
     image: String,
-    description: String
+    description: String,
+    routes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Route'
+        }
+    ],
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 });
+
+
+// Post hook to delete all reviews and routes associated with a rock when it is deleted
+rockSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) { // If the document exists (i.e. it wasn't already deleted) then delete all reviews and routes associated with it
+        await Review.deleteMany({
+            _id: {
+                $in: doc.reviews // Delete all reviews where the id is in the doc.reviews array
+            }
+        })
+        await Route.deleteMany({
+            _id: {
+                $in: doc.routes // Delete all routes where the id is in the doc.routes array
+            }
+        })
+    }
+})
+
 
 const Rock = mongoose.model('Rock', rockSchema);
 

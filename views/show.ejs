@@ -20,8 +20,62 @@
     <p><%=rock.location.area%>, <%=rock.location.country%></p>
     <a href="/destination"><button class="btn btn-sm btn-success">Go Back</button></a>
     <a href="/destination/<%=rock._id%>/edit"><button class="btn btn-sm btn-success">Edit</button></a>
+    <a href="/destination/<%=rock._id%>/newroute"><button class="btn btn-sm btn-success">Add Route</button></a>
     <form action="/destination/<%=rock._id%>?_method=DELETE" method="POST">
       <button class="btn btn-sm btn-danger">Delete</button>
+    </form>
+
+    <h3>Routes</h3>
+    <% for (let route of rock.routes) { %>
+    <div>
+      <p>Name: <%=route.name%></p>
+      <p>Grade: <%=route.grade%></p>
+      <p>Type: <%=route.types%></p>
+      <p>Pitches: <%=route.pitches%></p>
+      <p>Description: <%=route.description%></p>
+      <form action="/destination/<%=rock._id%>/routes/<%=route._id%>?_method=DELETE" method="POST">
+        <button class="btn btn-sm btn-danger">Delete</button>
+      </form>
+    </div>
+    <% } %>
+
+    <h3>Reviews</h3>
+    <% for(let review of rock.reviews) { %>
+    <div>
+      <p>Rating: <%=review.rating%></p>
+      <p>Review: <%=review.body%></p>
+      <form action="/destination/<%=rock._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
+        <button class="btn btn-sm btn-danger">Delete</button>
+      </form>
+    </div>
+    <% } %>
+
+    <!--review form-->
+    <div class="container-fluid">
+      <div class="container">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-6">
+            <h2>Leave a review:</h2>
+          </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-6">
+
+            <form action="/destination/<%=rock._id%>/reviews" method="POST">
+              <label class="form-label" for="rating">Rating:</label>
+              <input class="form-range" type="range" id="rating" min="1" max="5" name="review[rating]" required>
+
+              <label for="body">Review</label>
+              <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" required></textarea>
+
+              <button class="btn btn-sm btn-success">Submit</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!------------->
   </main>
 
   <%- include('partials/footer') %>

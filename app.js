@@ -13,9 +13,12 @@ const upload = multer({ dest: 'uploads/' }); // set the destination folder for t
 const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
 const catchAsync = require('./utils/catchAsync'); // catchAsync is used to catch the errors in async functions
 
-const { rockSchema } = require('./joiSchemas'); // joiSchemas is used to validate the form data
+const { rockSchema, routeSchema, reviewSchema } = require('./joiSchemas'); // joiSchemas is used to validate the form data
+
 //DB models
 const Rock = require('./models/rocks');
+const Review = require('./models/reviews');
+const Route = require('./models/routes');
 
 
 /********* connect to MongoDB ***********/
@@ -44,6 +47,7 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
+/*************joi schema form validation functions***************************** */
 const validateRock = (req, res, next) => {
     const { error } = rockSchema.validate(req.body); // validate the form data using the rockSchema
     if (error) {
@@ -53,6 +57,30 @@ const validateRock = (req, res, next) => {
         next();
     }
 }
+
+const validateRoute = (req, res, next) => {
+    const { error } = routeSchema.validate(req.body); // validate the form data using the routeSchema
+    if (error) {
+        const msg = error.details.map(el => el.message).join(','); // create a custom error message
+        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body); // validate the form data using the reviewSchema
+    if (error) {
+        const msg = error.details.map(el => el.message).join(','); // create a custom error message
+        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
+    } else {
+        next();
+    }
+}
+/*************joi schema form validation functions***************************** */
+
+
+
 
 
 app.get('/destination', catchAsync(async (req, res) => {
@@ -85,20 +113,15 @@ app.get('/new', (req, res) => {
 });
 
 app.post('/destination', validateRock, catchAsync(async (req, res) => {
-    try {
-        const rock = new Rock(req.body);
-        await rock.save();
-        res.redirect(`/destination/${rock._id}`);
-    }
-    catch (e) {
-        next(e);
-    }
-
+    const rock = new Rock(req.body);
+    await rock.save();
+    res.redirect(`/destination/${rock._id}`);
 }));
+
 
 app.get('/destination/:id', catchAsync(async (req, res) => {
     const id = req.params.id;
-    const rock = await Rock.findById(id);
+    const rock = await Rock.findById(id).populate('routes').populate('reviews');
     console.log(rock);
     res.render('show', { rock })
 }));
@@ -114,6 +137,49 @@ app.put('/destination/:id', validateRock, catchAsync(async (req, res) => {
     const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
     res.redirect(`/destination/${rock._id}`);
 }));
+
+
+app.get('/destination/:id/newroute', catchAsync(async (req, res) => {
+    const id = req.params.id;
+    const rock = await Rock.findById(id);
+    res.render('route', { rock });
+}));
+
+app.post('/destination/:id/routes', validateRoute, catchAsync(async (req, res) => {
+    const id = req.params.id;
+    const rock = await Rock.findById(id);
+    const route = new Route(req.body.route);
+    rock.routes.push(route);
+    await route.save();
+    await rock.save();
+    res.redirect(`/destination/${rock._id}`);
+}))
+
+app.delete('/destination/:id/routes/:routeId', catchAsync(async (req, res) => {
+    const { id, routeId } = req.params;
+    await Rock.findByIdAndUpdate(id, { $pull: { routes: routeId } });
+    await Route.findByIdAndDelete(routeId);
+    res.redirect(`/destination/${id}`);
+}));
+
+
+app.post('/destination/:id/reviews', validateReview, catchAsync(async (req, res) => {
+    const id = req.params.id;
+    const rock = await Rock.findById(id);
+    const review = new Review(req.body.review);
+    rock.reviews.push(review);
+    await review.save();
+    await rock.save();
+    res.redirect(`/destination/${rock._id}`);
+}));
+
+app.delete('/destination/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Rock.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/destination/${id}`);
+}));
+
 
 app.delete('/destination/:id', catchAsync(async (req, res) => {
     const id = req.params.id;
