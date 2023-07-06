@@ -20,7 +20,7 @@
     <p><%=rock.location.area%>, <%=rock.location.country%></p>
     <a href="/destination"><button class="btn btn-sm btn-success">Go Back</button></a>
     <a href="/destination/<%=rock._id%>/edit"><button class="btn btn-sm btn-success">Edit</button></a>
-    <a href="/destination/<%=rock._id%>/newroute"><button class="btn btn-sm btn-success">Add Route</button></a>
+    <a href="/destination/<%=rock._id%>/routes/newroute"><button class="btn btn-sm btn-success">Add Route</button></a>
     <form action="/destination/<%=rock._id%>?_method=DELETE" method="POST">
       <button class="btn btn-sm btn-danger">Delete</button>
     </form>

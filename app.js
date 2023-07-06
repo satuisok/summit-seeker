@@ -10,10 +10,15 @@ const ejsMate = require('ejs-mate'); // ejs-mate is a layout engine for ejs
 const multer = require('multer'); // multer is a node module for file uploads
 const upload = multer({ dest: 'uploads/' }); // set the destination folder for the uploaded files
 
-const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
-const catchAsync = require('./utils/catchAsync'); // catchAsync is used to catch the errors in async functions
+//ROUTE REQUIREMENTS
+const destinationRoutes = require('./routes/destinations'); // import the destination routes
+const climbingRoutes = require('./routes/climbing'); // import the climbing routes
+const reviewRoutes = require('./routes/reviews'); // import the review routes
 
-const { rockSchema, routeSchema, reviewSchema } = require('./joiSchemas'); // joiSchemas is used to validate the form data
+const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
+
+
+
 
 //DB models
 const Rock = require('./models/rocks');
@@ -43,149 +48,16 @@ app.use(express.static(path.join(__dirname, 'public'))); // set the path for the
 app.use(express.urlencoded({ extended: true })); // use express.urlencoded to parse the form data
 app.use(methodOverride('_method')); // use method-override to override the POST method in the form to PUT method
 
+
+
+//ROUTES
 app.get('/', (req, res) => {
     res.render('home');
 });
 
-/*************joi schema form validation functions***************************** */
-const validateRock = (req, res, next) => {
-    const { error } = rockSchema.validate(req.body); // validate the form data using the rockSchema
-    if (error) {
-        const msg = error.details.map(el => el.message).join(','); // create a custom error message
-        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
-    } else {
-        next();
-    }
-}
-
-const validateRoute = (req, res, next) => {
-    const { error } = routeSchema.validate(req.body); // validate the form data using the routeSchema
-    if (error) {
-        const msg = error.details.map(el => el.message).join(','); // create a custom error message
-        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
-    } else {
-        next();
-    }
-}
-
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body); // validate the form data using the reviewSchema
-    if (error) {
-        const msg = error.details.map(el => el.message).join(','); // create a custom error message
-        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
-    } else {
-        next();
-    }
-}
-/*************joi schema form validation functions***************************** */
-
-
-
-
-
-app.get('/destination', catchAsync(async (req, res) => {
-    const page = parseInt(req.query.page) || 1; // reg.query.page is the page number in the url. This is used to set the page number in the pagination.
-    const limit = parseInt(req.query.limit) || 20; // reg.query.limit is the limit number in the url. This is used to set the limit number in the pagination.
-
-    const skip = (page - 1) * limit; // skip is used to skip the number of documents in the database. This is used to set the page number in the pagination.
-
-    const rocks = await Rock.find({}).skip(skip).limit(limit);
-
-    res.render('index', { rocks, page, limit });
-}));
-
-app.post('/search', catchAsync(async (req, res) => {
-    const searchQuery = req.body.search;
-    const query = {
-        $or: [
-            { name: { $regex: searchQuery, $options: 'i' } }, // Match name case-insensitively
-            { 'location.area': { $regex: searchQuery, $options: 'i' } }, // Match area case-insensitively
-            { 'location.country': { $regex: searchQuery, $options: 'i' } } // Match country case-insensitively
-        ]
-    };
-
-    const rocks = await Rock.find(query);
-    res.render('search-results', { rocks, searchQuery });
-}));
-
-app.get('/new', (req, res) => {
-    res.render('new');
-});
-
-app.post('/destination', validateRock, catchAsync(async (req, res) => {
-    const rock = new Rock(req.body);
-    await rock.save();
-    res.redirect(`/destination/${rock._id}`);
-}));
-
-
-app.get('/destination/:id', catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const rock = await Rock.findById(id).populate('routes').populate('reviews');
-    console.log(rock);
-    res.render('show', { rock })
-}));
-
-app.get('/destination/:id/edit', catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const rock = await Rock.findById(id);
-    res.render('edit', { rock });
-}));
-
-app.put('/destination/:id', validateRock, catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
-    res.redirect(`/destination/${rock._id}`);
-}));
-
-
-app.get('/destination/:id/newroute', catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const rock = await Rock.findById(id);
-    res.render('route', { rock });
-}));
-
-app.post('/destination/:id/routes', validateRoute, catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const rock = await Rock.findById(id);
-    const route = new Route(req.body.route);
-    rock.routes.push(route);
-    await route.save();
-    await rock.save();
-    res.redirect(`/destination/${rock._id}`);
-}))
-
-app.delete('/destination/:id/routes/:routeId', catchAsync(async (req, res) => {
-    const { id, routeId } = req.params;
-    await Rock.findByIdAndUpdate(id, { $pull: { routes: routeId } });
-    await Route.findByIdAndDelete(routeId);
-    res.redirect(`/destination/${id}`);
-}));
-
-
-app.post('/destination/:id/reviews', validateReview, catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const rock = await Rock.findById(id);
-    const review = new Review(req.body.review);
-    rock.reviews.push(review);
-    await review.save();
-    await rock.save();
-    res.redirect(`/destination/${rock._id}`);
-}));
-
-app.delete('/destination/:id/reviews/:reviewId', catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    await Rock.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/destination/${id}`);
-}));
-
-
-app.delete('/destination/:id', catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const deletedRock = await Rock.findByIdAndDelete(id);
-    res.redirect('/destination');
-}));
+app.use('/destination', destinationRoutes); // use the destination routes
+app.use('/destination/:id/routes', climbingRoutes); // use the climbing routes
+app.use('/destination/:id/reviews', reviewRoutes); // use the review routes
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
@@ -196,7 +68,6 @@ app.use((err, req, res, next) => {
     if (!err.message) err.message = 'Oh No, Something Went Wrong!';
     res.status(statusCode).render('error', { err });
 });
-
 
 
 app.listen(3000, () => {
