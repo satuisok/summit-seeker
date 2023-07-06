@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Rock = require("../models/rocks");
+const Review = require("../models/reviews");
+const Route = require("../models/routes");
 const { names, locations } = require('./seedData');
 
 
@@ -19,6 +21,8 @@ main()
 
 const seedDB = async () => {
     await Rock.deleteMany({});
+    await Review.deleteMany({});
+    await Route.deleteMany({});
     for (let i = 0; i < names.length; i++) {
         const randomLocation = Math.floor(Math.random() * locations.length);
         const newRock = new Rock({

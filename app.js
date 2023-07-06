@@ -16,6 +16,7 @@ const climbingRoutes = require('./routes/climbing'); // import the climbing rout
 const reviewRoutes = require('./routes/reviews'); // import the review routes
 
 const session = require('express-session'); // express-session is used to create a session
+const flash = require('connect-flash'); // connect-flash is used to create flash messages
 const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
 
 
@@ -61,7 +62,13 @@ const sessionConfig = {
 }
 
 app.use(session(sessionConfig)); // use express-session to create a session
+app.use(flash()); // use connect-flash to create flash messages 
 
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success'); // set the success flash message
+    res.locals.error = req.flash('error'); // set the error flash message
+    next();
+})
 
 //ROUTES
 app.get('/', (req, res) => {

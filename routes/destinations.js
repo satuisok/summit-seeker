@@ -23,7 +23,7 @@ router.get('/', catchAsync(async (req, res) => {
 
     const rocks = await Rock.find({}).skip(skip).limit(limit);
 
-    res.render('index', { rocks, page, limit });
+    res.render('destination', { rocks, page, limit });
 }));
 
 router.post('/search', catchAsync(async (req, res) => {
@@ -44,8 +44,9 @@ router.get('/new', (req, res) => {
 });
 
 router.post('/', validateRock, catchAsync(async (req, res) => {
-    const rock = new Rock(req.body);
+    const rock = new Rock(req.body.rock);
     await rock.save();
+    req.flash('success', 'New Climbing Destination Created!');
     res.redirect(`/destination/${rock._id}`);
 }));
 
@@ -53,8 +54,14 @@ router.post('/', validateRock, catchAsync(async (req, res) => {
 router.get('/:id', catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findById(id).populate('routes').populate('reviews');
-    console.log(rock);
-    res.render('show', { rock })
+    if (!rock) {
+        req.flash('error', 'Destination Not Found!');
+        return res.redirect('/destination');
+    } else {
+        res.render('show', { rock })
+    }
+
+
 }));
 
 router.get('/:id/edit', catchAsync(async (req, res) => {
@@ -66,7 +73,15 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
 router.put('/:id', validateRock, catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
-    res.redirect(`/destination/${rock._id}`);
+    if (!rock) {
+        req.flash('error', 'Destination Not Found!');
+        return res.redirect('/destination');
+    } else {
+        req.flash('success', 'Destination Updated!');
+        res.redirect(`/destination/${rock._id}`);
+    }
+
+
 }));
 
 router.delete('/:id', catchAsync(async (req, res) => {

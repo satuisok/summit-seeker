@@ -15,6 +15,7 @@
 <body>
 
   <%- include('partials/navbar') %>
+  <%- include('partials/flash') %>
 
   <main>
     <!--search-->
@@ -73,11 +74,11 @@
           <div class="row d-flex justify-content-center">
             <div class="col-12">
               <% if (page > 1) { %>
-              <a href="/index?page=<%= page - 1 %>&limit=<%= limit %>" class="btn btn-link">Previous</a>
+              <a href="/destination?page=<%= page - 1 %>&limit=<%= limit %>" class="btn btn-link">Previous</a>
               <% } %>
 
               <% if (rocks.length === limit) { %>
-              <a href="/index?page=<%= page + 1 %>&limit=<%= limit %>" class="btn btn-link">Next</a>
+              <a href="/destination?page=<%= page + 1 %>&limit=<%= limit %>" class="btn btn-link">Next</a>
               <% } %>
             </div>
           </div>

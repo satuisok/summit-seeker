@@ -30,6 +30,7 @@ router.post('/', validateRoute, catchAsync(async (req, res) => {
     rock.routes.push(route);
     await route.save();
     await rock.save();
+    req.flash('success', 'New Route Created!');
     res.redirect(`/destination/${rock._id}`);
 }))
 
@@ -37,6 +38,7 @@ router.delete('/:routeId', catchAsync(async (req, res) => {
     const { id, routeId } = req.params;
     await Rock.findByIdAndUpdate(id, { $pull: { routes: routeId } });
     await Route.findByIdAndDelete(routeId);
+    req.flash('success', 'Route Deleted!');
     res.redirect(`/destination/${id}`);
 }));
 
