@@ -15,6 +15,7 @@ const destinationRoutes = require('./routes/destinations'); // import the destin
 const climbingRoutes = require('./routes/climbing'); // import the climbing routes
 const reviewRoutes = require('./routes/reviews'); // import the review routes
 
+const session = require('express-session'); // express-session is used to create a session
 const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
 
 
@@ -48,6 +49,18 @@ app.use(express.static(path.join(__dirname, 'public'))); // set the path for the
 app.use(express.urlencoded({ extended: true })); // use express.urlencoded to parse the form data
 app.use(methodOverride('_method')); // use method-override to override the POST method in the form to PUT method
 
+const sessionConfig = {
+    secret: 'thiswillbeabettersecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + (1000 * 60 * 60 * 24 * 7), // set the cookie to expire in 1 week
+        maxAge: (1000 * 60 * 60 * 24 * 7)
+    }
+}
+
+app.use(session(sessionConfig)); // use express-session to create a session
 
 
 //ROUTES
