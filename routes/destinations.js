@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Rock = require('../models/rocks');
 const { rockSchema } = require('../joiSchemas');
+const { isLoggedIn } = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
-
 const validateRock = (req, res, next) => {
     const { error } = rockSchema.validate(req.body); // validate the form data using the rockSchema
     if (error) {
@@ -43,7 +43,7 @@ router.get('/new', (req, res) => {
     res.render('new');
 });
 
-router.post('/', validateRock, catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, validateRock, catchAsync(async (req, res) => {
     const rock = new Rock(req.body.rock);
     await rock.save();
     req.flash('success', 'New Climbing Destination Created!');
@@ -60,17 +60,15 @@ router.get('/:id', catchAsync(async (req, res) => {
     } else {
         res.render('show', { rock })
     }
-
-
 }));
 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findById(id);
     res.render('edit', { rock });
 }));
 
-router.put('/:id', validateRock, catchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, validateRock, catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
     if (!rock) {
@@ -84,7 +82,7 @@ router.put('/:id', validateRock, catchAsync(async (req, res) => {
 
 }));
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const id = req.params.id;
     const deletedRock = await Rock.findByIdAndDelete(id);
     res.redirect('/destination');

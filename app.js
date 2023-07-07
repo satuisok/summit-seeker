@@ -7,13 +7,17 @@ const app = express();
 const methodOverride = require('method-override'); // method-override is used to override the POST method in the form to PUT method
 const path = require('path'); // path module is used to set the path for the views folder
 const ejsMate = require('ejs-mate'); // ejs-mate is a layout engine for ejs
+const passport = require('passport'); // passport is used for authentication
+const localStrategy = require('passport-local'); // passport-local is used for local authentication
 const multer = require('multer'); // multer is a node module for file uploads
 const upload = multer({ dest: 'uploads/' }); // set the destination folder for the uploaded files
 
 //ROUTE REQUIREMENTS
+const userRoutes = require('./routes/users');
 const destinationRoutes = require('./routes/destinations'); // import the destination routes
 const climbingRoutes = require('./routes/climbing'); // import the climbing routes
 const reviewRoutes = require('./routes/reviews'); // import the review routes
+
 
 const session = require('express-session'); // express-session is used to create a session
 const flash = require('connect-flash'); // connect-flash is used to create flash messages
@@ -26,6 +30,7 @@ const ExpressError = require('./utils/ExpressError'); // ExpressError is used to
 const Rock = require('./models/rocks');
 const Review = require('./models/reviews');
 const Route = require('./models/routes');
+const User = require('./models/user');
 
 
 /********* connect to MongoDB ***********/
@@ -63,8 +68,14 @@ const sessionConfig = {
 
 app.use(session(sessionConfig)); // use express-session to create a session
 app.use(flash()); // use connect-flash to create flash messages 
+app.use(passport.initialize()); // use passport to initialize the session
+app.use(passport.session()); // use passport to create a session
+passport.use(new localStrategy(User.authenticate())); // use passport-local to authenticate the user
+passport.serializeUser(User.serializeUser()); // use passport to serialize the user. This means that passport will store the user id in the session
+passport.deserializeUser(User.deserializeUser()); // use passport to deserialize the user. This means that passport will get the user id from the session and find the user in the database
 
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user; // set the currentUser to the user in the session
     res.locals.success = req.flash('success'); // set the success flash message
     res.locals.error = req.flash('error'); // set the error flash message
     next();
@@ -75,6 +86,7 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
+app.use('/', userRoutes);
 app.use('/destination', destinationRoutes); // use the destination routes
 app.use('/destination/:id/routes', climbingRoutes); // use the climbing routes
 app.use('/destination/:id/reviews', reviewRoutes); // use the review routes

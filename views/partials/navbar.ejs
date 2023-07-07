@@ -16,7 +16,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="#">Search</a>
+            <a class="nav-link" href="/destination">Search</a>
           </li>
 
           <li class="nav-item">
@@ -25,6 +25,7 @@
         </ul>
         <ul class="navbar-nav ms-auto">
 
+          <% if (!currentUser) { %>
           <li class="nav-item">
             <a class="nav-link" href="/login">Log In</a>
           </li>
@@ -32,10 +33,12 @@
           <li class="nav-item">
             <a class="nav-link" href="/register">Register</a>
           </li>
+          <% } else { %>
 
           <li class="nav-item">
             <a class="nav-link" href="/logout">Log Out</a>
           </li>
+          <% } %>
 
         </ul>
       </div>

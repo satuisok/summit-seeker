@@ -1,0 +1,24 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+    margin-bottom: 10rem;
+}
+
+#header {
+    margin-bottom: 2rem;
+}
+
+#form-image {
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+input {
+    margin-bottom: 1rem;
+}
+
+button {
+    margin-top: 1rem;
+}
