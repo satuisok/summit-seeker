@@ -1,19 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Rock = require('../models/rocks');
-const { rockSchema } = require('../joiSchemas');
-const { isLoggedIn } = require('../middleware');
+const { validateRock, isLoggedIn, isAuthor } = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
-const validateRock = (req, res, next) => {
-    const { error } = rockSchema.validate(req.body); // validate the form data using the rockSchema
-    if (error) {
-        const msg = error.details.map(el => el.message).join(','); // create a custom error message
-        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
-    } else {
-        next();
-    }
-}
+
+
 
 router.get('/', catchAsync(async (req, res) => {
     const page = parseInt(req.query.page) || 1; // reg.query.page is the page number in the url. This is used to set the page number in the pagination.
@@ -45,15 +36,25 @@ router.get('/new', (req, res) => {
 
 router.post('/', isLoggedIn, validateRock, catchAsync(async (req, res) => {
     const rock = new Rock(req.body.rock);
+    rock.author = req.user._id;
     await rock.save();
     req.flash('success', 'New Climbing Destination Created!');
     res.redirect(`/destination/${rock._id}`);
 }));
 
-
 router.get('/:id', catchAsync(async (req, res) => {
     const id = req.params.id;
-    const rock = await Rock.findById(id).populate('routes').populate('reviews');
+    const rock = await Rock.findById(id).populate({
+        path: 'routes',
+        populate: {
+            path: 'creator'
+        }
+    }).populate({
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    }).populate('author');
     if (!rock) {
         req.flash('error', 'Destination Not Found!');
         return res.redirect('/destination');
@@ -68,7 +69,7 @@ router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     res.render('edit', { rock });
 }));
 
-router.put('/:id', isLoggedIn, validateRock, catchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, isAuthor, validateRock, catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
     if (!rock) {
@@ -82,7 +83,7 @@ router.put('/:id', isLoggedIn, validateRock, catchAsync(async (req, res) => {
 
 }));
 
-router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, isAuthor, catchAsync(async (req, res) => {
     const id = req.params.id;
     const deletedRock = await Rock.findByIdAndDelete(id);
     res.redirect('/destination');

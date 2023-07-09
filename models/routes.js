@@ -10,7 +10,11 @@ const routeSchema = new Schema({
         lowercase: true
     },
     pitches: Number,
-    description: String
+    description: String,
+    creator: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 module.exports = mongoose.model('Route', routeSchema);

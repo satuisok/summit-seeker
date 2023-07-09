@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router({ mergeParams: true }); // mergeParams allows us to access the params from the parent router.
 const Rock = require('../models/rocks');
 const Route = require('../models/routes');
-const { isLoggedIn } = require('../middleware');
+const { isLoggedIn, isRouteAuthor } = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { routeSchema } = require('../joiSchemas');
@@ -28,6 +28,7 @@ router.post('/', isLoggedIn, validateRoute, catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findById(id);
     const route = new Route(req.body.route);
+    route.creator = req.user._id;
     rock.routes.push(route);
     await route.save();
     await rock.save();
@@ -35,7 +36,7 @@ router.post('/', isLoggedIn, validateRoute, catchAsync(async (req, res) => {
     res.redirect(`/destination/${rock._id}`);
 }))
 
-router.delete('/:routeId', isLoggedIn, catchAsync(async (req, res) => {
+router.delete('/:routeId', isLoggedIn, isRouteAuthor, catchAsync(async (req, res) => {
     const { id, routeId } = req.params;
     await Rock.findByIdAndUpdate(id, { $pull: { routes: routeId } });
     await Route.findByIdAndDelete(routeId);

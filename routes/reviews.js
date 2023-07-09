@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router({ mergeParams: true }); // merge the params from the destination and climbing routes
 const Rock = require('../models/rocks');
 const Review = require('../models/reviews');
-const { isLoggedIn } = require('../middleware');
+const { isLoggedIn, isReviewAuthor } = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { reviewSchema } = require('../joiSchemas');
@@ -21,6 +21,7 @@ router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findById(id);
     const review = new Review(req.body.review);
+    review.author = req.user._id;
     rock.reviews.push(review);
     await review.save();
     await rock.save();
@@ -28,7 +29,7 @@ router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
     res.redirect(`/destination/${rock._id}`);
 }));
 
-router.delete('/:reviewId', isLoggedIn, catchAsync(async (req, res) => {
+router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     await Rock.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
