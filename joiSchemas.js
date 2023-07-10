@@ -8,7 +8,7 @@ module.exports.rockSchema = Joi.object({
             state: Joi.string().allow(''),
             country: Joi.string().required(),
         }).required(),
-        image: Joi.string().allow(''),
+        //image: Joi.string().allow(''),
         description: Joi.string().required(),
     }).required()
 });

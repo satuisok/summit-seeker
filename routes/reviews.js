@@ -2,40 +2,16 @@ const express = require('express');
 const router = express.Router({ mergeParams: true }); // merge the params from the destination and climbing routes
 const Rock = require('../models/rocks');
 const Review = require('../models/reviews');
-const { isLoggedIn, isReviewAuthor } = require('../middleware');
+const { isLoggedIn, isReviewAuthor, validateReview } = require('../middleware');
 const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
-const { reviewSchema } = require('../joiSchemas');
+const reviews = require('../controllers/reviewControl');
 
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body); // validate the form data using the reviewSchema
-    if (error) {
-        const msg = error.details.map(el => el.message).join(','); // create a custom error message
-        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
-    } else {
-        next();
-    }
-}
 
-router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
-    const id = req.params.id;
-    const rock = await Rock.findById(id);
-    const review = new Review(req.body.review);
-    review.author = req.user._id;
-    rock.reviews.push(review);
-    await review.save();
-    await rock.save();
-    req.flash('success', 'New Review Created!');
-    res.redirect(`/destination/${rock._id}`);
-}));
+//post new review
+router.post('/', isLoggedIn, validateReview, catchAsync(reviews.newReviewPost));
 
-router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    await Rock.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-    req.flash('success', 'Review Deleted!');
-    res.redirect(`/destination/${id}`);
-}));
+//delete review
+router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(reviews.deleteReview));
 
 
 module.exports = router;

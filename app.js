@@ -9,8 +9,7 @@ const path = require('path'); // path module is used to set the path for the vie
 const ejsMate = require('ejs-mate'); // ejs-mate is a layout engine for ejs
 const passport = require('passport'); // passport is used for authentication
 const localStrategy = require('passport-local'); // passport-local is used for local authentication
-const multer = require('multer'); // multer is a node module for file uploads
-const upload = multer({ dest: 'uploads/' }); // set the destination folder for the uploaded files
+
 
 //ROUTE REQUIREMENTS
 const userRoutes = require('./routes/users');

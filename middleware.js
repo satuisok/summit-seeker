@@ -1,8 +1,9 @@
 const Rock = require('./models/rocks'); // require the Rock model
 const Route = require('./models/routes'); // require the Route model
 const Review = require('./models/reviews'); // require the Review model
-const { rockSchema } = require('./joiSchemas.js'); // require the Joi schema
+const { rockSchema, routeSchema, reviewSchema } = require('./joiSchemas.js'); // require the Joi schema
 const ExpressError = require('./utils/ExpressError'); // require the ExpressError class
+
 
 
 module.exports.validateRock = (req, res, next) => {
@@ -15,6 +16,25 @@ module.exports.validateRock = (req, res, next) => {
     }
 }
 
+module.exports.validateRoute = (req, res, next) => {
+    const { error } = routeSchema.validate(req.body); // validate the form data using the routeSchema
+    if (error) {
+        const msg = error.details.map(el => el.message).join(','); // create a custom error message
+        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
+    } else {
+        next();
+    }
+}
+
+module.exports.validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body); // validate the form data using the reviewSchema
+    if (error) {
+        const msg = error.details.map(el => el.message).join(','); // create a custom error message
+        throw new ExpressError(msg, 400); // throw an ExpressError if the form data is invalid
+    } else {
+        next();
+    }
+}
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {

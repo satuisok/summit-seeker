@@ -13,7 +13,12 @@ const rockSchema = new Schema({
         state: String,
         country: String
     },
-    image: String,
+    image: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
     description: String,
     routes: [
         {

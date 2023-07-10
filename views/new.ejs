@@ -27,7 +27,7 @@
         <img id="form-image" src="/pics/cade-prior-V_WOKRbR1dw-unsplash.jpg" alt="form-image" class="img-fluid">
       </div>
       <div id="form" class="col-md-6">
-        <form action="/destination" method="POST">
+        <form action="/destination" method="POST" enctype="multipart/form-data">
           <label for="name">Name:</label>
           <input class="form-control" type="text" id="name" name="rock[name]" required>
 
@@ -41,7 +41,7 @@
           <input class="form-control" type="text" name="rock[location][country]" id="country" required>
 
           <label for="image" class="form-label">Image URL:</label>
-          <input class="form-control" name="rock[image]" id="image" type="text">
+          <input class="form-control" name="image" id="image" type="file" multiple>
 
           <label class="form-label" for="description">Description:</label>
           <textarea class="form-control" name="rock[description]" id="description" cols="20" rows="6"></textarea>
