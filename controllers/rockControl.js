@@ -1,5 +1,8 @@
 const Rock = require('../models/rocks');
 const { cloudinary } = require('../cloudinary');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding'); // import the geocoding module
+const mapBoxToken = process.env.MAPBOX_TOKEN; // import the mapbox token
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken }); // create a geocoder object
 
 
 //destination index controls
@@ -36,10 +39,19 @@ module.exports.new = (req, res) => {
 
 //destination new controls
 module.exports.newDestination = async (req, res) => {
+    const locationData = req.body.rock.location;
+    const locationQuery = `${locationData.area}, ${locationData.state}, ${locationData.country}`;
+    const geoData = await geocoder.forwardGeocode({
+        query: locationQuery,
+        limit: 1
+    }).send()
+    console.log(geoData.body.features);
     const rock = new Rock(req.body.rock);
     rock.image = req.files.map(f => ({ url: f.path, filename: f.filename }));
     rock.author = req.user._id;
+    rock.geometry = geoData.body.features[0].geometry;
     await rock.save();
+    console.log(rock);
     req.flash('success', 'New Climbing Destination Created!');
     res.redirect(`/destination/${rock._id}`);
 };
