@@ -10,7 +10,8 @@ module.exports.rockSchema = Joi.object({
         }).required(),
         //image: Joi.string().allow(''),
         description: Joi.string().required(),
-    }).required()
+    }).required(),
+    deleteImages: Joi.array()
 });
 
 module.exports.routeSchema = Joi.object({

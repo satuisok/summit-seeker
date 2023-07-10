@@ -1,4 +1,5 @@
 const Rock = require('../models/rocks');
+const { cloudinary } = require('../cloudinary');
 
 
 //destination index controls
@@ -69,6 +70,10 @@ module.exports.show = async (req, res) => {
 module.exports.editShowForm = async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findById(id);
+    if (!rock) {
+        req.flash('error', 'Destination Not Found!');
+        return res.redirect('/destination');
+    }
     res.render('edit', { rock });
 };
 
@@ -76,16 +81,18 @@ module.exports.editShowForm = async (req, res) => {
 module.exports.editShow = async (req, res) => {
     const id = req.params.id;
     const rock = await Rock.findByIdAndUpdate(id, { ...req.body.rock });
-    if (!rock) {
-        req.flash('error', 'Destination Not Found!');
-        return res.redirect('/destination');
-    } else {
-        const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
-        rock.image.push(...imgs);
-        await rock.save();
-        req.flash('success', 'Destination Updated!');
-        res.redirect(`/destination/${rock._id}`);
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    rock.image.push(...imgs);
+    await rock.save();
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await rock.updateOne({ $pull: { image: { filename: { $in: req.body.deleteImages } } } })
+
     }
+    req.flash('success', 'Destination Updated!');
+    res.redirect(`/destination/${rock._id}`);
 };
 
 //destination delete controls

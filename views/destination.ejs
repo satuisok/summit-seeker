@@ -54,7 +54,11 @@
             <div class="card text-start">
               <div class="row g-0">
                 <div class="col-md-5">
+                  <% if (!rock.image.length) { %>
+                  <img src="/pics/no-image-available-icon-6_mhls36.png" class="img-fluid rounded-start" alt="image not found">
+                  <% } else { %>
                   <img src="<%=rock.image[0].url%>" class="img-fluid rounded-start" alt="...">
+                  <% } %>
                 </div>
                 <div class="col-md-7">
                   <div class="card-body">

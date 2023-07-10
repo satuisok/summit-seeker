@@ -3,6 +3,15 @@ const Route = require('./routes');
 const Review = require('./reviews');
 const Schema = mongoose.Schema;
 
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+});
+
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200');
+});
+
 const rockSchema = new Schema({
     name: {
         type: String,
@@ -13,12 +22,7 @@ const rockSchema = new Schema({
         state: String,
         country: String
     },
-    image: [
-        {
-            url: String,
-            filename: String
-        }
-    ],
+    image: [ImageSchema],
     description: String,
     routes: [
         {
