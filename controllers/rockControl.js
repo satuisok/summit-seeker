@@ -80,6 +80,9 @@ module.exports.editShow = async (req, res) => {
         req.flash('error', 'Destination Not Found!');
         return res.redirect('/destination');
     } else {
+        const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+        rock.image.push(...imgs);
+        await rock.save();
         req.flash('success', 'Destination Updated!');
         res.redirect(`/destination/${rock._id}`);
     }

@@ -28,7 +28,7 @@ router.get('/:id', catchAsync(destinations.show));
 router.get('/:id/edit', isLoggedIn, catchAsync(destinations.editShowForm));
 
 //destinations edit show page
-router.put('/:id', isLoggedIn, isAuthor, validateRock, catchAsync(destinations.editShow));
+router.put('/:id', isLoggedIn, isAuthor, upload.array('image'), validateRock, catchAsync(destinations.editShow));
 
 //destinations delete
 router.delete('/:id', isLoggedIn, isAuthor, catchAsync(destinations.delete));

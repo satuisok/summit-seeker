@@ -24,7 +24,7 @@
     </div>
     <div class="row d-flex justify-content-center">
       <div id="form" class="col-md-6">
-        <form action="/destination/<%=rock._id%>?_method=PUT" method="POST">
+        <form action="/destination/<%=rock._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
           <label for="name">Name:</label>
           <input class="form-control" type="text" id="name" name="rock[name]" value="<%=rock.name%>" required>
 
@@ -37,8 +37,8 @@
           <label class=" form-label" for="country">Country:</label>
           <input class="form-control" type="text" name="rock[location][country]" id="country" value="<%=rock.location.country%>" required>
 
-          <label for=" image" class="form-label">Image URL:</label>
-          <input class="form-control" name="rock[image]" id="image" type="text" value="<%=rock.image%>">
+          <label for=" image" class="form-label">Add Images:</label>
+          <input class="form-control" name="image" id="image" type="file" multiple>
 
           <label class="form-label" for="description">Description:</label>
           <textarea class="form-control" name="rock[description]" id="description" cols="20" rows="6"><%=rock.description%></textarea>
