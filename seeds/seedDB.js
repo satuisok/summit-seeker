@@ -43,7 +43,13 @@ const seedDB = async () => {
                 },
             ],
             description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus iure sit iusto nisi recusandae saepe obcaecati laudantium reprehenderit assumenda similique, exercitationem, iste, ipsa corporis porro aliquid optio maxime unde debitis. Nihil repellat modi unde molestiae assumenda alias quia deserunt fuga quo, laborum qui corrupti sunt voluptate repudiandae labore deleniti harum facere voluptatum iusto vitae odio dolores? In neque esse quam!",
-            author: "646dd32232a233dac9a5b8b0"
+            author: "646dd32232a233dac9a5b8b0",
+            geometry: {
+                type: "Point",
+                coordinates: [
+                    -118.242766, 34.053691
+                ]
+            }
         })
         await newRock.save();
     }
