@@ -13,8 +13,10 @@ module.exports.index = async (req, res) => {
     const skip = (page - 1) * limit; // skip is used to skip the number of documents in the database. This is used to set the page number in the pagination.
 
     const rocks = await Rock.find({}).skip(skip).limit(limit);
-
-    res.render('destination', { rocks, page, limit });
+    const mapDestinations = await Rock.find({});
+    res.render('destination', {
+        rocks, mapDestinations, page, limit
+    });
 };
 
 

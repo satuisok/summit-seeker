@@ -12,7 +12,9 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
-const rockSchema = new Schema({
+const opts = { toJSON: { virtuals: true } }; // This will allow the virtuals to be included in the res.json() output.
+
+const RockSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -51,11 +53,16 @@ const rockSchema = new Schema({
             required: true
         }
     }
+}, opts);
+
+RockSchema.virtual('properties.popUpMarkup').get(function () {
+    return `<strong><a href="/destination/${this._id}">${this.name}</a></strong>
+    <p>${this.description.substring(0, 20)}...</p>`
 });
 
 
 // Post hook to delete all reviews and routes associated with a rock when it is deleted
-rockSchema.post('findOneAndDelete', async function (doc) {
+RockSchema.post('findOneAndDelete', async function (doc) {
     if (doc) { // If the document exists (i.e. it wasn't already deleted) then delete all reviews and routes associated with it
         await Review.deleteMany({
             _id: {
@@ -71,6 +78,6 @@ rockSchema.post('findOneAndDelete', async function (doc) {
 })
 
 
-const Rock = mongoose.model('Rock', rockSchema);
+const Rock = mongoose.model('Rock', RockSchema);
 
 module.exports = Rock;
