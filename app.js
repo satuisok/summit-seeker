@@ -20,6 +20,7 @@ const reviewRoutes = require('./routes/reviews'); // import the review routes
 
 const session = require('express-session'); // express-session is used to create a session
 const flash = require('connect-flash'); // connect-flash is used to create flash messages
+const mongoSanitize = require('express-mongo-sanitize'); // express-mongo-sanitize is used to sanitize the user input
 const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
 
 
@@ -65,6 +66,7 @@ const sessionConfig = {
     }
 }
 
+app.use(mongoSanitize()); // use express-mongo-sanitize to sanitize the user input
 app.use(session(sessionConfig)); // use express-session to create a session
 app.use(flash()); // use connect-flash to create flash messages 
 app.use(passport.initialize()); // use passport to initialize the session
@@ -73,7 +75,9 @@ passport.use(new localStrategy(User.authenticate())); // use passport-local to a
 passport.serializeUser(User.serializeUser()); // use passport to serialize the user. This means that passport will store the user id in the session
 passport.deserializeUser(User.deserializeUser()); // use passport to deserialize the user. This means that passport will get the user id from the session and find the user in the database
 
+
 app.use((req, res, next) => {
+    console.log(req.query)
     res.locals.currentUser = req.user; // set the currentUser to the user in the session
     res.locals.success = req.flash('success'); // set the success flash message
     res.locals.error = req.flash('error'); // set the error flash message
