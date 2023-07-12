@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" crossorigin="anonymous">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="/css/index.css">
   <title>Index</title>
@@ -68,9 +68,9 @@
               <div class="row g-0">
                 <div class="col-md-5">
                   <% if (!rock.image.length) { %>
-                  <img src="/pics/no-image-available-icon-6_mhls36.png" class="img-fluid rounded-start" alt="image not found">
+                  <img src="/pics/no-image-available-icon-6_mhls36.png" class="img-fluid rounded-start" alt="image not found" crossorigin="anonymous">
                   <% } else { %>
-                  <img src="<%=rock.image[0].url%>" class="img-fluid rounded-start" alt="...">
+                  <img src="<%=rock.image[0].url%>" class="img-fluid rounded-start" alt="..." crossorigin="anonymous">
                   <% } %>
                 </div>
                 <div class="col-md-7">

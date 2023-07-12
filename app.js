@@ -9,6 +9,7 @@ const path = require('path'); // path module is used to set the path for the vie
 const ejsMate = require('ejs-mate'); // ejs-mate is a layout engine for ejs
 const passport = require('passport'); // passport is used for authentication
 const localStrategy = require('passport-local'); // passport-local is used for local authentication
+const helmet = require('helmet'); // helmet is used to set the HTTP headers for security
 
 
 //ROUTE REQUIREMENTS
@@ -71,6 +72,54 @@ const sessionConfig = {
 app.use(mongoSanitize()); // use express-mongo-sanitize to sanitize the user input
 app.use(session(sessionConfig)); // use express-session to create a session
 app.use(flash()); // use connect-flash to create flash messages 
+
+app.use(helmet()); // use helmet to set the HTTP headers for security
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+];
+const styleSrcUrls = [
+    "https://cdn.jsdelivr.net",
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/doxttwwnh/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com/",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
+
 app.use(passport.initialize()); // use passport to initialize the session
 app.use(passport.session()); // use passport to create a session
 passport.use(new localStrategy(User.authenticate())); // use passport-local to authenticate the user
