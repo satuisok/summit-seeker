@@ -77,7 +77,6 @@ passport.deserializeUser(User.deserializeUser()); // use passport to deserialize
 
 
 app.use((req, res, next) => {
-    console.log(req.query)
     res.locals.currentUser = req.user; // set the currentUser to the user in the session
     res.locals.success = req.flash('success'); // set the success flash message
     res.locals.error = req.flash('error'); // set the error flash message
