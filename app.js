@@ -56,11 +56,13 @@ app.use(express.urlencoded({ extended: true })); // use express.urlencoded to pa
 app.use(methodOverride('_method')); // use method-override to override the POST method in the form to PUT method
 
 const sessionConfig = {
+    name: 'session_ct',
     secret: 'thiswillbeabettersecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        //secure: true,
         expires: Date.now() + (1000 * 60 * 60 * 24 * 7), // set the cookie to expire in 1 week
         maxAge: (1000 * 60 * 60 * 24 * 7)
     }
