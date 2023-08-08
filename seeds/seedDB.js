@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 const Rock = require("../models/rocks");
 const Review = require("../models/reviews");
 const Route = require("../models/routes");
-const { names, locations } = require('./seedData');
+const rockAndMountainNames = require("./rockNames");
+const climbingRouteNames = require("./routeNames");
+const locations = require("./locationSeeds");
+const grades = require("./grades");
+const images = require("./images");
+
 
 
 
@@ -19,14 +24,19 @@ main()
 /********* connect to MongoDB ***********/
 
 
+
 const seedDB = async () => {
     await Rock.deleteMany({});
     await Review.deleteMany({});
     await Route.deleteMany({});
-    for (let i = 0; i < names.length; i++) {
-        const randomLocation = Math.floor(Math.random() * locations.length);
+
+    for (let i = 0; i < rockAndMountainNames.length; i++) {
+        const randomLocation = Math.floor(Math.random() * 1000);
+        const randomImage1 = Math.floor(Math.random() * images.length);
+        const randomImage2 = Math.floor(Math.random() * images.length);
+
         const newRock = new Rock({
-            name: names[i],
+            name: rockAndMountainNames[i],
             location: {
                 area: locations[randomLocation].location,
                 state: locations[randomLocation].state,
@@ -34,12 +44,12 @@ const seedDB = async () => {
             },
             image: [
                 {
-                    url: 'https://res.cloudinary.com/doxttwwnh/image/upload/v1685102446/Summit-Seeker/cade-prior-kYoq334F0oE-unsplash_uvyanq.jpg',
-                    filename: 'Summit-Seeker/meydjcd8cviz7lps2fhp'
+                    url: images[randomImage1],
+                    filename: 'Summit-Seeker/meydjcd8cviz7lps2f7p'
                 },
                 {
-                    url: 'https://res.cloudinary.com/doxttwwnh/image/upload/v1685346257/Summit-Seeker/i1egzmoupxfk0moccxhg.jpg',
-                    filename: 'Summit-Seeker/meydjcd8cviz7lps2fhp'
+                    url: images[randomImage2],
+                    filename: 'Summit-Seeker/meydjcd8cviz7lps2fh7'
                 },
             ],
             description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus iure sit iusto nisi recusandae saepe obcaecati laudantium reprehenderit assumenda similique, exercitationem, iste, ipsa corporis porro aliquid optio maxime unde debitis. Nihil repellat modi unde molestiae assumenda alias quia deserunt fuga quo, laborum qui corrupti sunt voluptate repudiandae labore deleniti harum facere voluptatum iusto vitae odio dolores? In neque esse quam!",
@@ -51,7 +61,26 @@ const seedDB = async () => {
                     locations[randomLocation].latitude
                 ]
             }
-        })
+        });
+
+        const numRoutes = 45;
+        for (let j = 0; j < numRoutes; j++) {
+            const randomRoute = Math.floor(Math.random() * climbingRouteNames.length);
+            const randomGrade = Math.floor(Math.random() * grades.length);
+
+            const newRoute = new Route({
+                name: climbingRouteNames[randomRoute],
+                grade: grades[randomGrade],
+                types: 'sport',
+                pitches: Math.floor(Math.random() * 10),
+                description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+                creator: "646dd32232a233dac9a5b8b0"
+            });
+
+            await newRoute.save();
+            newRock.routes.push(newRoute); // Associate the route with the rock
+        }
+
         await newRock.save();
     }
 

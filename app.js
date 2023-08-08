@@ -81,8 +81,7 @@ const scriptSrcUrls = [
     "https://api.mapbox.com/",
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
-    "https://cdn.jsdelivr.net",
-
+    "https://cdn.jsdelivr.net"
 ];
 const styleSrcUrls = [
     "https://cdn.jsdelivr.net",
@@ -91,6 +90,7 @@ const styleSrcUrls = [
     "https://api.mapbox.com/",
     "https://api.tiles.mapbox.com/",
     "https://fonts.googleapis.com/",
+    "https://fonts.gstatic.com",
     "https://use.fontawesome.com/",
 
 ];
@@ -101,7 +101,10 @@ const connectSrcUrls = [
     "https://events.mapbox.com/",
 
 ];
-const fontSrcUrls = [];
+const fontSrcUrls = [
+    "https://fonts.googleapis.com/",
+    "https://fonts.gstatic.com",
+];
 app.use(
     helmet.contentSecurityPolicy({
         directives: {

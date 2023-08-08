@@ -2,9 +2,71 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+.carousel {
+    margin-bottom: 15px;
+}
+
 .carousel-item img {
     object-fit: cover;
     object-position: center;
     overflow: hidden;
     height: 70vh;
+}
+
+#info-row {
+    padding-right: 0;
+    padding-left: 12px;
+}
+
+.weather-table {
+    display: flex;
+    justify-content: center;
+}
+
+#weather-box {
+    background: linear-gradient(#73dff0, #50aad1);
+    border-radius: 10px;
+}
+
+
+#weather-box td {
+    padding: 10px 50px;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgb(98, 98, 99);
+}
+
+#weather-box tr {
+    border-bottom: 1px solid #e9ecef;
+}
+
+#buttons {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: end;
+}
+
+.button-link {
+    padding: 0 1rem;
+}
+
+#description-container {
+    padding: 3rem 0;
+}
+
+#map-container {
+    padding-bottom: 1rem;
+}
+
+#map {
+    border-radius: 10px;
+}
+
+#route-chart {
+    margin-top: 6rem;
+    background-color: rgba(195, 196, 198, 0.2);
+}
+
+#route-table {
+    padding: 6rem 0;
 }

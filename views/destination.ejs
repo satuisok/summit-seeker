@@ -62,14 +62,14 @@
 
             <div class="card text-start">
               <div class="row g-0">
-                <div class="col-md-5">
+                <div class="col-md-6 justify-content-center">
                   <% if (!rock.image.length) { %>
-                  <img src="/pics/no-image-available-icon-6_mhls36.png" class="img-fluid rounded-start" alt="image not found" crossorigin="anonymous">
+                  <img src="/pics/no-image-available-icon-6_mhls36.png" class="rounded-start" alt="image not found" crossorigin="anonymous">
                   <% } else { %>
                   <img src="<%=rock.image[0].url%>" class="img-fluid rounded-start" alt="..." crossorigin="anonymous">
                   <% } %>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-6">
                   <div class="card-body">
                     <h5 class="card-title"><%=rock.name%></h5>
                     <p class="card-text"><%=rock.location.area%>, <%=rock.location.country%></p>
