@@ -13,6 +13,7 @@ const helmet = require('helmet'); // helmet is used to set the HTTP headers for 
 
 
 //ROUTE REQUIREMENTS
+const homeRoutes = require('./routes/home');
 const userRoutes = require('./routes/users');
 const destinationRoutes = require('./routes/destinations'); // import the destination routes
 const climbingRoutes = require('./routes/climbing'); // import the climbing routes
@@ -142,10 +143,7 @@ app.use((req, res, next) => {
 })
 
 //ROUTES
-app.get('/', (req, res) => {
-    res.render('home');
-});
-
+app.use('/', homeRoutes);
 app.use('/', userRoutes);
 app.use('/destination', destinationRoutes); // use the destination routes
 app.use('/destination/:id/routes', climbingRoutes); // use the climbing routes
