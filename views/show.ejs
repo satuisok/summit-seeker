@@ -11,6 +11,7 @@
 
   <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js' crossorigin="anonymous"></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' crossorigin="anonymous" />
+  <link rel="stylesheet" href="/css/stars.css">
   <link rel="stylesheet" href="/css/show.css">
   <title>Document</title>
 </head>
@@ -22,125 +23,138 @@
   <main>
 
     <!--image carousel-->
-    <div class="container">
-      <div class="row">
-
-        <div id="carousel" class="carousel slide">
-          <div class="carousel-inner">
-            <% rock.image.forEach((img, i) => { %>
-            <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-              <img src="<%=img.url%>" class="d-block w-100" alt="...">
+    <div id="image-background" class="container-fluid">
+      <div class="container">
+        <div class="row">
+          <div id="carousel" class="carousel slide">
+            <div class="carousel-inner">
+              <% rock.image.forEach((img, i) => { %>
+              <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                <img src="<%=img.url%>" alt="...">
+              </div>
+              <% }) %>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
             </div>
-            <% }) %>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!--info-->
-        <div id="info-row" class="row">
-          <div class="col-xl-8">
-            <div class="row">
+    <!--info-->
+    <div class="container">
+      <div id="info-row" class="row">
+        <div class="col-xl-8">
+          <div class="row">
 
-              <div id="info" class="col-md-4">
-                <h1><%=rock.name%></h1>
-                <h3><%=rock.location.area%>, <%=rock.location.country%></h3>
-                <div>
-                  <p>star review</p>
-                </div>
+            <div id="info" class="col-md-5">
+              <h1><%=rock.name%></h1>
+              <h3><%=rock.location.area%>, <%=rock.location.country%></h3>
+              <%if(averageGrade) { %>
+              <div class="average-rating col">
+                <p class="starability-result" data-rating="<%=averageGrade%>">
+                  Rated: <%=averageGrade%>
+                </p>
               </div>
-
-
-              <div class="weather-table col-md-8">
-                <table id="weather-box" class="text-center">
-                  <tbody>
-                    <tr id="weather-icons">
-                      <td><img src="<%=forecast.currentIcon%>" alt=""></td>
-                      <td><img src="<%=forecast.tomorrowIcon%>" alt=""></td>
-                      <td><img src="<%=forecast.dayAfterIcon%>" alt=""></td>
-                    </tr>
-                    <tr id="temperature">
-                      <td>
-                        <%=forecast.currentTemp%>
-                      </td>
-                      <td>
-                        <%=forecast.tomorrowTemp%>
-                      </td>
-                      <td>
-                        <%=forecast.dayAfterTemp%>
-                      </td>
-                    </tr>
-                    <tr id="day">
-                      <td>
-                        <%=forecast.currentDate%>
-                      </td>
-                      <td>
-                        <%=forecast.tomorrow%>
-                      </td>
-                      <td>
-                        <%=forecast.dayAfter%>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
+              <%}%>
             </div>
 
-            <div id="buttons">
-              <% if (currentUser) { %>
-              <a class="button-link" href="/destination/<%=rock._id%>/reviews"><button class="btn btn-sm btn-success">Add review</button></a>
-              <a class="button-link" href="/destination/<%=rock._id%>/routes/newroute"><button class="btn btn-sm btn-primary">Add route</button></a>
-              <% } else { %>
-              <a class="button-link" href="/login"><button class="btn btn-link">Login to add review or new route</button></a>
-              <% } %>
+            <!--weather api-->
+            <div class="weather-table col-md-7">
+              <table id="weather-box" class="text-center">
+                <tbody>
+                  <tr id="weather-icons">
+                    <td><img src="<%=forecast.currentIcon%>" alt=""></td>
+              <td><img src="<%=forecast.tomorrowIcon%>" alt=""></td>
+              <td><img src="<%=forecast.dayAfterIcon%>" alt=""></td>
+              </tr>
+              <tr id="temperature">
+                <td>
+                  <%=forecast.currentTemp%>
+                </td>
+                <td>
+                  <%=forecast.tomorrowTemp%>
+                </td>
+                <td>
+                  <%=forecast.dayAfterTemp%>
+                </td>
+              </tr>
+              <tr id="day">
+                <td>
+                  <%=forecast.currentDate%>
+                </td>
+                <td>
+                  <%=forecast.tomorrow%>
+                </td>
+                <td>
+                  <%=forecast.dayAfter%>
+                </td>
+              </tr>
+              </tbody>
+              </table>
+            </div>
+          </div>
 
-              <% if(currentUser && rock.author.equals(currentUser._id)) { %>
-              <a class="button-link" href="/destination/<%=rock._id%>/edit"><button class="btn btn-sm btn-warning">Edit</button></a>
-              <%}%>
+          <div id="buttons">
+            <% if (currentUser) { %>
+            <a class="button-link" href="#add-review"><button class="btn btn-sm btn-success">Add review</button></a>
+            <a class="button-link" href="/destination/<%=rock._id%>/routes/newroute"><button class="btn btn-sm btn-primary">Add route</button></a>
+            <% } else { %>
+            <a class="button-link" href="/login"><button class="btn btn-link">Login to add review or new route</button></a>
+            <% } %>
+
+            <% if(currentUser && rock.author.equals(currentUser._id)) { %>
+            <a class="button-link" href="/destination/<%=rock._id%>/edit"><button class="btn btn-sm btn-warning">Edit</button></a>
+            <%}%>
             </div>
 
            
 
             <div id="description-container">
               <p><%=rock.description%></p>
-            </div>
-
           </div>
 
-          <!--map-->
-          <div id="map-container" class="col-md-4">
-            <div class="row justify-content-end">
-              <div id='map' style='width: 450px; height: 450px;'></div>
-            </div>
+        </div>
 
+        <!--map-->
+        <div id="map-container" class="col-md-4">
+          <div class="row justify-content-end">
+            <div id='map' style='width: 450px; height: 450px;'></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!--route chart-->
+    <div class="container-fluid">
+      <div id="route-chart">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div>
+                <canvas id="myChart"></canvas>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!--route chart-->
-    <div id="route-chart" class="container-fluid">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div>
-              <canvas id="myChart"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="dropdown">
+      <a id="route-button" href="#route-table" class="btn btn-large btn-primary">Show availble routes</a>
     </div>
 
     <!--route table-->
     <% if (rock.routes.length > 0) { %>
-    <div id="route-table" class="container">
+    <div id="route-table" class="container hidden">
       <div class="row justify-content-center">
         <div class="col-md-8">
           <table class="table">
@@ -176,6 +190,8 @@
     </div>
     <% } %>
 
+
+
     <!--reviews-->
     <div class="container">
       <div class="row justify-content-center">
@@ -185,9 +201,11 @@
         <div class="row">
           <% for(let review of rock.reviews) { %>
 
-          <div class="card" style="width: 18rem;">
+          <div class="card" style="width: 18rem; border: none;">
             <div class="card-body">
-              <h5 class="card-title">Rating</h5>
+              <p class="starability-result" data-rating=<%=review.rating%>>
+                Rated: <%=review.rating%>
+              </p>
               <h6 class="card-subtitle mb-2 text-body-secondary"><%=review.author.username%></h6>
               <p class="card-text"><%=review.body%></p>
               <% if(currentUser && review.author.equals(currentUser._id)) { %>
@@ -271,15 +289,27 @@
                     <h2>Leave a review:</h2>
                   </div>
                 </div>
-                <div class="row d-flex justify-content-center">
+                <div id="add-review" class="row d-flex justify-content-center">
                   <div class="col-md-6">
 
                     <form action="/destination/<%=rock._id%>/reviews" method="POST">
-                      <label class="form-label" for="rating">Rating:</label>
-                      <input class="form-range" type="range" id="rating" min="1" max="5" name="review[rating]" required>
+                      <fieldset class="starability-basic">
+                        <legend>First rating:</legend>
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                      </fieldset>
 
                       <label for="body">Review</label>
-                      <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" required></textarea>
+                      <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" maxlength="1000" required></textarea>
 
                       <button class="btn btn-sm btn-success">Submit</button>
                     </form>
@@ -306,6 +336,9 @@
               // Call the createRouteChart function with the rock data
               createRouteChart(<%- JSON.stringify(rock) %>);
             </script>
+            <script src="/js/table.js"></script>
+
+
 </body>
 
 </html>

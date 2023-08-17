@@ -13,10 +13,10 @@ body {
 }
 
 .nav-item a:hover {
-    color: rgb(154, 114, 96);
+    color: rgb(255, 255, 255);
 }
 
-#logo {
+/* #logo {
     width: 600px;
     min-width: 500px;
     opacity: 0;
@@ -34,6 +34,26 @@ body {
     margin-top: 8rem;
     max-width: 410px;
 
+} */
+
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.header-container {
+    padding-top: 7rem;
+}
+
+.form-container {
+    padding-left: 1rem;
+    padding-top: 1rem;
+
+}
+
+#label {
+    font-weight: 700;
+    padding-top: 1rem;
 }
 
 #footer {

@@ -38,7 +38,7 @@ const seedDB = async () => {
         const newRock = new Rock({
             name: rockAndMountainNames[i],
             location: {
-                area: locations[randomLocation].location,
+                area: locations[randomLocation].city,
                 state: locations[randomLocation].state,
                 country: locations[randomLocation].country
             },

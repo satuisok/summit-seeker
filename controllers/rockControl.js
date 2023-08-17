@@ -15,8 +15,9 @@ module.exports.index = async (req, res) => {
 
     const skip = (page - 1) * limit; // skip is used to skip the number of documents in the database. This is used to set the page number in the pagination.
 
-    const rocks = await Rock.find({}).skip(skip).limit(limit);
+    const rocks = await Rock.find({}).populate('author').skip(skip).limit(limit);
     const mapDestinations = await Rock.find({});
+
     res.render('destination', {
         rocks, mapDestinations, page, limit
     });
@@ -80,9 +81,10 @@ module.exports.show = async (req, res) => {
         return res.redirect('/destination');
     }
 
-    const url = `https://api.weatherapi.com/v1/forecast.json?key=${weatherAppKey}&q=${rock.geometry.coordinates[1]},${rock.geometry.coordinates[0]}&days=3&aqi=no&alerts=no`;
 
     try {
+        const url = `https://api.weatherapi.com/v1/forecast.json?key=${weatherAppKey}&q=${rock.geometry.coordinates[1]},${rock.geometry.coordinates[0]}&days=3&aqi=no&alerts=no`;
+
         const response = await axios.get(url);
         const weatherData = response.data;
 
@@ -106,7 +108,14 @@ module.exports.show = async (req, res) => {
             dayAfterIcon: weatherData.forecast.forecastday[2].day.condition.icon
         }
 
-        res.render('show', { rock, forecast });
+        // average rating control
+        let averageGrade = 0;
+        for (let review of rock.reviews) {
+            averageGrade += review.rating;
+        }
+        averageGrade = Math.floor(averageGrade / rock.reviews.length);
+
+        res.render('show', { rock, forecast, averageGrade });
 
     } catch (e) {
         res.render('show', { rock });
