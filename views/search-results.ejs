@@ -18,10 +18,10 @@
   <main>
     <div class="container">
 
-      <div class="row">
-        <div class="col">
+      <div class="row justify-content-center">
+        <div id="search" class="col-md-8 text-center">
           <h1>Search Results</h1>
-          <a href="/index"><button class="btn btn-success">New Search</button></a>
+          <a href="/"><button class="btn btn-success">New Search</button></a>
         </div>
       </div>
 
@@ -30,18 +30,22 @@
         <% if (rocks.length > 0) { %>
         <% for(let rock of rocks) { %>
 
-        <div class="card text-start">
-          <div class="row g-0">
-            <div class="col-md-5">
-              <img src="<%=rock.image%>" class="img-fluid rounded-start" alt="...">
+        <div class="card mb-3" style="max-width: 1000px;">
+          <div class="row">
+            <div class="col-md-4 img-container d-flex align-items-center">
+              <% if (!rock.image.length) { %>
+              <img src="/pics/no-image-available-icon-6_mhls36.png" class="rounded-start" alt="image not found" crossorigin="anonymous">
+              <% } else { %>
+              <img src="<%=rock.image[0].url%>" class="img-fluid rounded-start" alt="..." crossorigin="anonymous">
+              <% } %>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-8">
               <div class="card-body">
                 <h5 class="card-title"><%=rock.name%></h5>
                 <p class="card-text"><%=rock.location.area%>, <%=rock.location.country%></p>
-                <p class="card-text"><%=rock.description.substring(0, 120)%>...</p>
-                <p class="card-text"><small class="text-body-secondary">Submitted by: Name</small></p>
-                <a href="#" class="btn btn-sm btn-primary">Go somewhere</a>
+                <p class="card-text"><%=rock.description%></p>
+                <p class="card-text"><small class="text-body-secondary">Submitted by: <%=rock.author.username%></small></p>
+                <a href="/destination/<%=rock._id%>" class="btn btn-sm btn-primary">View</a>
               </div>
             </div>
           </div>

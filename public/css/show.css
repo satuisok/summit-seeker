@@ -80,3 +80,19 @@ body {
 .hidden {
     display: none;
 }
+
+#route-button {
+    margin: 1rem 0;
+}
+
+.review-header {
+    padding-top: 3rem;
+}
+
+.review-container {
+    background-color: rgba(195, 196, 198, 0.2);
+}
+
+#review-button {
+    margin: 1rem auto;
+}

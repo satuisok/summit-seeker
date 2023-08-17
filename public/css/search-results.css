@@ -7,8 +7,10 @@ h1 {
     margin-left: 32px;
 }
 
-div.card {
+#search {
+    padding: 2rem 0;
+}
+
+.img-container {
     padding: 0;
-    margin: 2rem;
-    max-width: 500px;
 }
