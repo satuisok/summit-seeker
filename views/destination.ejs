@@ -11,7 +11,7 @@
 
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" crossorigin="anonymous">
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js" crossorigin="anonymous"></script>
-
+  <link rel="stylesheet" href="/css/stars.css">
   <link rel="stylesheet" href="/css/index.css">
   <title>Index</title>
 </head>
@@ -74,6 +74,13 @@
                   <div class="card-body">
                     <h5 class="card-title"><%=rock.name%></h5>
                     <p class="card-text"><%=rock.location.area%>, <%=rock.location.country%></p>
+
+                    <%if (rock.avgRating) { %>
+                    <p id="star-rating" class="starability-result" data-rating="<%=rock.avgRating%>">
+                      Rated: <%=rock.avgRating%>
+                    </p>
+                    <% } %>
+
                     <p class="card-text"><%=rock.description%></p>
                     <p class="card-text"><small class="text-body-secondary">Submitted by: <%=rock.author.username%></small></p>
                     <a href="/destination/<%=rock._id%>" class="btn btn-sm btn-primary">View</a>

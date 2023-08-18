@@ -38,6 +38,10 @@ const RockSchema = new Schema({
             ref: 'Review'
         }
     ],
+    avgRating: {
+        type: Number,
+        default: 0
+    },
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -58,6 +62,35 @@ const RockSchema = new Schema({
 RockSchema.virtual('properties.popUpMarkup').get(function () {
     return `<strong><a href="/destination/${this._id}">${this.name}</a></strong>
     <p>${this.description.substring(0, 20)}...</p>`
+});
+
+RockSchema.pre('save', async function (next) {
+    const rock = this;
+
+    if (rock.isModified('reviews')) {
+        const totalReviews = rock.reviews.length;
+
+        if (totalReviews === 0) {
+            rock.avgRating = 0;
+        } else {
+            try {
+                const populatedRock = await rock.constructor
+                    .findById(rock._id)
+                    .populate('reviews', 'rating')
+                    .exec();
+
+                const sumRatings = populatedRock.reviews.reduce(
+                    (accumulator, review) => accumulator + review.rating, 0
+                );
+                rock.avgRating = Math.round(sumRatings / totalReviews);
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
+    next();
 });
 
 

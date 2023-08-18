@@ -13,9 +13,14 @@ h1 {
     padding-top: 1rem;
 }
 
+p#star-rating.starability-result {
+    margin: 5px auto;
+}
+
 .img-container {
     padding: 0;
 }
+
 
 h5 {
     padding-top: 1rem;

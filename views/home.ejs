@@ -36,6 +36,12 @@
               <a class="nav-link" href="/destination">Search</a>
             </li>
 
+            <% if (currentUser) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/destination/new">Add New Spot</a>
+            </li>
+            <% } %>
+
             <li class="nav-item">
               <a class="nav-link" href="#">About</a>
             </li>

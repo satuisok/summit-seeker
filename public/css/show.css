@@ -81,6 +81,10 @@ body {
     display: none;
 }
 
+.delete-button {
+    padding: 6px 0;
+}
+
 #route-button {
     margin: 1rem 0;
 }
