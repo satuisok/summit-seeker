@@ -68,18 +68,19 @@ const seedDB = async () => {
         for (let j = 0; j < numRoutes; j++) {
             const randomRoute = Math.floor(Math.random() * climbingRouteNames.length);
             const randomGrade = Math.floor(Math.random() * grades.length);
+            const randomType = ['sport', 'trad', 'top rope', 'boulder'];
 
             const newRoute = new Route({
                 name: climbingRouteNames[randomRoute],
                 grade: grades[randomGrade],
-                types: 'sport',
+                types: randomType[Math.floor(Math.random() * randomType.length)],
                 pitches: Math.floor(Math.random() * 10),
                 description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
                 creator: "646dd32232a233dac9a5b8b0"
             });
 
             newRoute.rock = newRock;  // Associate the route with the rock 
-            console.log("New Route Object:", newRoute); // Debugging
+            //console.log("New Route Object:", newRoute); // Debugging
             await newRoute.save();
             newRock.routes.push(newRoute); // Associate the route with the rock
 
