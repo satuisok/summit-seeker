@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Rock = require('./rocks');
 
 const routeSchema = new Schema({
     name: String,
@@ -11,10 +12,34 @@ const routeSchema = new Schema({
     },
     pitches: Number,
     description: String,
+    rock: {
+        type: Schema.Types.ObjectId,
+        ref: 'Rock'
+    },
     creator: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     }
 });
+
+
+routeSchema.post('save', async function () {
+    const route = this;
+    if (route.types === 'sport') {
+        route.rock.typeTotal.sport += 1;
+    }
+    if (route.types === 'trad') {
+        route.rock.typeTotal.trad += 1;
+    }
+    if (route.types === 'top rope') {
+        route.rock.typeTotal.topRope += 1;
+    }
+    if (route.types === 'boulder') {
+        route.rock.typeTotal.boulder += 1;
+    }
+    console.log(route.rock.typeTotal)
+    await route.rock.save();
+})
+
 
 module.exports = mongoose.model('Route', routeSchema);

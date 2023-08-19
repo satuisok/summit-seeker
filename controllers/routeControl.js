@@ -12,6 +12,7 @@ module.exports.newRoutePost = async (req, res) => {
     const rock = await Rock.findById(id);
     const route = new Route(req.body.route);
     route.creator = req.user._id;
+    route.rock = rock;
     rock.routes.push(route);
     await route.save();
     await rock.save();

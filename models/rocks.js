@@ -32,6 +32,24 @@ const RockSchema = new Schema({
             ref: 'Route'
         }
     ],
+    typeTotal: {
+        sport: {
+            type: Number,
+            default: 0
+        },
+        trad: {
+            type: Number,
+            default: 0
+        },
+        topRope: {
+            type: Number,
+            default: 0
+        },
+        boulder: {
+            type: Number,
+            default: 0
+        }
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
@@ -64,7 +82,7 @@ RockSchema.virtual('properties.popUpMarkup').get(function () {
     <p>${this.description.substring(0, 20)}...</p>`
 });
 
-RockSchema.pre('save', async function (next) {
+RockSchema.pre('save', async function () {
     const rock = this;
 
     if (rock.isModified('reviews')) {
@@ -77,7 +95,7 @@ RockSchema.pre('save', async function (next) {
                 const populatedRock = await rock.constructor
                     .findById(rock._id)
                     .populate('reviews', 'rating')
-                    .exec();
+                    .exec(); // you need to use exec() to get the promise returned by populate() to resolve
 
                 const sumRatings = populatedRock.reviews.reduce(
                     (accumulator, review) => accumulator + review.rating, 0
@@ -90,8 +108,10 @@ RockSchema.pre('save', async function (next) {
         }
     }
 
-    next();
 });
+
+
+
 
 
 // Post hook to delete all reviews and routes associated with a rock when it is deleted

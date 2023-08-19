@@ -30,6 +30,7 @@ const seedDB = async () => {
     await Review.deleteMany({});
     await Route.deleteMany({});
 
+
     for (let i = 0; i < rockAndMountainNames.length; i++) {
         const randomLocation = Math.floor(Math.random() * 1000);
         const randomImage1 = Math.floor(Math.random() * images.length);
@@ -77,8 +78,11 @@ const seedDB = async () => {
                 creator: "646dd32232a233dac9a5b8b0"
             });
 
+            newRoute.rock = newRock;  // Associate the route with the rock 
+            console.log("New Route Object:", newRoute); // Debugging
             await newRoute.save();
             newRock.routes.push(newRoute); // Associate the route with the rock
+
         }
 
         await newRock.save();
