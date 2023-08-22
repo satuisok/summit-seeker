@@ -22,7 +22,9 @@ module.exports.newRoutePost = async (req, res) => {
 
 module.exports.deleteRoute = async (req, res) => {
     const { id, routeId } = req.params;
-    await Rock.findByIdAndUpdate(id, { $pull: { routes: routeId } });
+    const deletedRoute = await Route.findById(routeId);
+    const routeType = deletedRoute.types;
+    await Rock.findByIdAndUpdate(id, { $pull: { routes: routeId } }); // $inc: { 'typeTotal.sport': -1 } is a mongoDB operator that decrements the sport property by 1
     await Route.findByIdAndDelete(routeId);
     req.flash('success', 'Route Deleted!');
     res.redirect(`/destination/${id}`);

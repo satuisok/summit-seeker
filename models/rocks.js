@@ -82,37 +82,6 @@ RockSchema.virtual('properties.popUpMarkup').get(function () {
     <p>${this.description.substring(0, 20)}...</p>`
 });
 
-RockSchema.pre('save', async function () {
-    const rock = this;
-
-    if (rock.isModified('reviews')) {
-        const totalReviews = rock.reviews.length;
-
-        if (totalReviews === 0) {
-            rock.avgRating = 0;
-        } else {
-            try {
-                const populatedRock = await rock.constructor
-                    .findById(rock._id)
-                    .populate('reviews', 'rating')
-                    .exec(); // you need to use exec() to get the promise returned by populate() to resolve
-
-                const sumRatings = populatedRock.reviews.reduce(
-                    (accumulator, review) => accumulator + review.rating, 0
-                );
-                rock.avgRating = Math.round(sumRatings / totalReviews);
-
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    }
-
-});
-
-
-
-
 
 // Post hook to delete all reviews and routes associated with a rock when it is deleted
 RockSchema.post('findOneAndDelete', async function (doc) {

@@ -7,6 +7,7 @@ module.exports.newReviewPost = async (req, res) => {
     const rock = await Rock.findById(id);
     const review = new Review(req.body.review);
     review.author = req.user._id;
+    review.rock = rock;
     rock.reviews.push(review);
     await review.save();
     await rock.save();

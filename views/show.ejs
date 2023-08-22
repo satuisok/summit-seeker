@@ -58,8 +58,8 @@
               <h3><%=rock.location.area%>, <%=rock.location.country%></h3>
               <%if(averageGrade) { %>
               <div class="average-rating col">
-                <p class="starability-result" data-rating="<%=averageGrade%>">
-                  Rated: <%=averageGrade%>
+                <p class="starability-result" data-rating="<%=rock.avgRating%>">
+                  Rated: <%=rock.avgRating%>
                 </p>
               </div>
               <%}%>
@@ -203,7 +203,7 @@
 
           <div class="card" style="width: 18rem; border: none;">
             <div class="card-body">
-              <p class="starability-result" data-rating=<%=review.rating%>>
+              <p class="starability-result" data-rating="<%=review.rating%>">
                 Rated: <%=review.rating%>
               </p>
               <h6 class="card-subtitle mb-2 text-body-secondary"><%=review.author.username%></h6>

@@ -37,7 +37,7 @@ routeSchema.post('save', async function () {
     if (route.types === 'boulder') {
         route.rock.typeTotal.boulder += 1;
     }
-    console.log(route.rock.typeTotal)
+
     await route.rock.save();
 })
 
