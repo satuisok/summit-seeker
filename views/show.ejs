@@ -134,12 +134,12 @@
     </div>
 
     <!--route chart-->
-    <div class="container-fluid">
-      <div id="route-chart">
-        <div class="container">
+    <div id="route-chart" class="container-fluid">
+      <div>
+        <div class=" container">
           <div class="row justify-content-center">
             <div class="col-md-8">
-              <div>
+              <div id="chart">
                 <canvas id="myChart"></canvas>
               </div>
             </div>
@@ -155,7 +155,7 @@
     <!--route table-->
     <% if (rock.routes.length > 0) { %>
     <div id="route-table" class="container hidden">
-      <div class="row justify-content-center">
+      <div id="table-bg" class="row justify-content-center">
         <div class="col-md-8">
           <table class="table">
             <thead>
@@ -198,7 +198,7 @@
         <div class="col-md-4 text-center review-header">
           <h2>Reviews</h2>
         </div>
-        <div class="row">
+        <div class="row justify-content-center">
           <% for(let review of rock.reviews) { %>
 
           <div class="card" style="width: 18rem; border: none;">
@@ -232,12 +232,11 @@
                 <h2>Leave a review:</h2>
               </div>
             </div>
-            <div id="add-review" class="row d-flex justify-content-center">
+            <div class="row d-flex justify-content-center">
               <div class="col-md-6">
 
-                <form action="/destination/<%=rock._id%>/reviews" method="POST">
+                <form id="add-review" action="/destination/<%=rock._id%>/reviews" method="POST">
                   <fieldset class="starability-basic">
-                    <legend>First rating:</legend>
                     <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
                     <input type="radio" id="first-rate1" name="review[rating]" value="1" />
                     <label for="first-rate1" title="Terrible">1 star</label>
@@ -251,7 +250,7 @@
                     <label for="first-rate5" title="Amazing">5 stars</label>
                   </fieldset>
 
-                  <label for="body">Review</label>
+                  <label for="body">Write Review:</label>
                   <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" maxlength="1000" required></textarea>
 
                   <button id="review-button" class="btn btn-sm btn-success">Submit</button>

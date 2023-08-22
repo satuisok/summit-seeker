@@ -4,6 +4,7 @@ body {
 
 #image-background {
     background-color: rgba(195, 196, 198, 0.2);
+
 }
 
 #carousel {
@@ -71,11 +72,17 @@ body {
 #route-chart {
     margin-top: 6rem;
     background-color: rgba(195, 196, 198, 0.2);
+
 }
+
+/* #chart {
+    background-color: rgb(248, 248, 249);
+} */
 
 #route-table {
     padding: 6rem 0;
 }
+
 
 .hidden {
     display: none;
@@ -86,16 +93,22 @@ body {
 }
 
 #route-button {
-    margin: 1rem 0;
+    margin: 2rem 0;
+    padding: 10px 10rem;
+    background-color: #344B50;
+    border-color: #344B50;
 }
 
 .review-header {
     padding-top: 3rem;
+    font-weight: 600;
 }
 
 .review-container {
     background-color: rgba(195, 196, 198, 0.2);
 }
+
+
 
 #review-button {
     margin: 1rem auto;
