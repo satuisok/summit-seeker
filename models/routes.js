@@ -41,5 +41,24 @@ routeSchema.post('save', async function () {
     await route.rock.save();
 })
 
+routeSchema.post('findOneAndDelete', async function (route) {
+    const deletedRock = await route.populate('rock', 'typeTotal');
+
+    if (route.types === 'sport') {
+        route.rock.typeTotal.sport -= 1;
+    }
+    if (route.types === 'trad') {
+        route.rock.typeTotal.trad -= 1;
+    }
+    if (route.types === 'top rope') {
+        route.rock.typeTotal.topRope -= 1;
+    }
+    if (route.types === 'boulder') {
+        route.rock.typeTotal.boulder -= 1;
+    }
+
+    await route.rock.save();
+})
+
 
 module.exports = mongoose.model('Route', routeSchema);
