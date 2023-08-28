@@ -22,7 +22,7 @@
       <div class="row justify-content-center">
         <div id="search" class="col-md-8 text-center">
           <h1>Search Results</h1>
-          <a href="/"><button class="btn btn-success">New Search</button></a>
+          <a href="/"><button id="search-btn" class="btn btn-success">New Search</button></a>
         </div>
       </div>
 
@@ -35,7 +35,7 @@
           <div class="row">
             <div class="col-md-4 img-container d-flex align-items-center">
               <% if (!rock.image.length) { %>
-              <img src="/pics/no-image-available-icon-6_mhls36.png" class="rounded-start" alt="image not found" crossorigin="anonymous">
+              <img src="/pics/no-image-available-icon-6_mhls36.png" class="img-fluid rounded-start" alt="image not found" crossorigin="anonymous">
               <% } else { %>
               <img src="<%=rock.image[0].url%>" class="img-fluid rounded-start" alt="..." crossorigin="anonymous">
               <% } %>
@@ -55,7 +55,7 @@
                 <p class="card-text"><b>Availble Routes:</b></p>
                 <p class="card-text"><b>Sport:</b> <%=rock.typeTotal.sport%> <b>Trad:</b> <%=rock.typeTotal.trad%> <b>Top Rope:</b> <%=rock.typeTotal.topRope%> <b>Boulder:</b> <%=rock.typeTotal.boulder%></p>
                 <p class="card-text"><small class="text-body-secondary">Submitted by: <%=rock.author.username%></small></p>
-                <a href="/destination/<%=rock._id%>" class="btn btn-sm btn-primary">View</a>
+                <a id="view-btn" href="/destination/<%=rock._id%>" class="btn btn-sm btn-primary">View</a>
               </div>
             </div>
           </div>

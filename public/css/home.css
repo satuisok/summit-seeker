@@ -51,6 +51,7 @@ h1 {
 
 }
 
+
 #label {
     font-weight: 700;
     padding-top: 1rem;
@@ -63,4 +64,14 @@ h1 {
 #footer p {
     padding-top: 2px;
     margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    #search {
+        padding-bottom: 1rem;
+    }
+
+    #search-btn {
+        margin-top: 1rem;
+    }
 }

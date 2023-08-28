@@ -103,14 +103,14 @@
 
           <div id="buttons">
             <% if (currentUser) { %>
-            <a class="button-link" href="#add-review"><button class="btn btn-sm btn-success">Add review</button></a>
-            <a class="button-link" href="/destination/<%=rock._id%>/routes/newroute"><button class="btn btn-sm btn-primary">Add route</button></a>
+            <a class="button-link" href="#add-review"><button id="review-btn" class="btn btn-sm btn-success">Add review</button></a>
+            <a class="button-link" href="/destination/<%=rock._id%>/routes/newroute"><button id="route-btn" class="btn btn-sm btn-primary">Add route</button></a>
             <% } else { %>
             <a class="button-link" href="/login"><button class="btn btn-link">Login to add review or new route</button></a>
             <% } %>
 
             <% if(currentUser && rock.author.equals(currentUser._id)) { %>
-            <a class="button-link" href="/destination/<%=rock._id%>/edit"><button class="btn btn-sm btn-warning">Edit</button></a>
+            <a class="button-link" href="/destination/<%=rock._id%>/edit"><button id="edit-btn" class="btn btn-sm btn-warning">Edit</button></a>
             <%}%>
             </div>
 
@@ -155,9 +155,9 @@
     <!--route table-->
     <% if (rock.routes.length > 0) { %>
     <div id="route-table" class="container hidden">
-      <div id="table-bg" class="row justify-content-center">
+      <div class="row justify-content-center">
         <div class="col-md-8">
-          <table class="table">
+          <table id="table" class="table">
             <thead>
               <tr>
                 <th scope="col">Name</th>
@@ -250,8 +250,7 @@
                     <label for="first-rate5" title="Amazing">5 stars</label>
                   </fieldset>
 
-                  <label for="body">Write Review:</label>
-                  <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" maxlength="1000" required></textarea>
+                  <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" maxlength="1000" placeholder="Review this climbing spot" required></textarea>
 
                   <button id="review-button" class="btn btn-sm btn-success">Submit</button>
                 </form>

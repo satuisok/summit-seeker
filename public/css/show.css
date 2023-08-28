@@ -3,7 +3,7 @@ body {
 }
 
 #image-background {
-    background-color: rgba(195, 196, 198, 0.2);
+    background-color: #344B50;
 
 }
 
@@ -12,7 +12,7 @@ body {
 }
 
 .carousel-item img {
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     overflow: hidden;
     height: 70vh;
@@ -53,6 +53,22 @@ body {
     justify-content: end;
 }
 
+#review-btn {
+    background-color: #FF9800;
+    border-color: #FF9800;
+}
+
+#route-btn {
+    background-color: #009688;
+    border-color: #009688;
+}
+
+#edit-btn {
+    background-color: #F44336;
+    border-color: #F44336;
+    color: #fff;
+}
+
 .button-link {
     padding: 0 1rem;
 }
@@ -83,6 +99,10 @@ body {
     padding: 6rem 0;
 }
 
+#table.table {
+    background-color: #344B50;
+}
+
 
 .hidden {
     display: none;
@@ -102,14 +122,18 @@ body {
 .review-header {
     padding-top: 3rem;
     font-weight: 600;
+    color: #fff;
 }
 
 .review-container {
-    background-color: rgba(195, 196, 198, 0.2);
+    background-color: #344B50;
+
 }
 
 
 
 #review-button {
     margin: 1rem auto;
+    background-color: #009688;
+    border-color: #009688;
 }

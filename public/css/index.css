@@ -17,12 +17,18 @@ h1 {
     /* text-shadow: 2px 0px 2px rgba(0, 0, 0, 0.3); */
 }
 
+
 p#star-rating.starability-result {
     margin: 5px auto;
 }
 
 .img-container {
     padding: 0;
+}
+
+#view-btn {
+    background-color: #607D8B;
+    border-color: #607D8B;
 }
 
 
@@ -33,4 +39,10 @@ h5 {
 
 .btn.btn-link {
     margin: 0 1rem 1rem 1rem;
+}
+
+@media (max-width: 600px) {
+    .img-fluid.rounded-start {
+        width: 514px;
+    }
 }
