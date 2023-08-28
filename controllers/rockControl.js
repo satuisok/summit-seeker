@@ -1,4 +1,5 @@
 const Rock = require('../models/rocks');
+const Review = require('../models/reviews');
 const { cloudinary } = require('../cloudinary');
 const axios = require('axios');
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding'); // import the geocoding module
@@ -70,16 +71,20 @@ module.exports.show = async (req, res) => {
         populate: {
             path: 'creator'
         }
-    }).populate({
-        path: 'reviews',
-        populate: {
-            path: 'author'
-        }
     }).populate('author');
     if (!rock) {
         req.flash('error', 'Destination Not Found!');
         return res.redirect('/destination');
     }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+    const skip = (page - 1) * limit;
+
+    const reviews = await Review.find({ rock: rock._id }).populate('author').skip(skip).limit(limit);
+
+
+
 
 
     try {
@@ -108,14 +113,14 @@ module.exports.show = async (req, res) => {
             dayAfterIcon: weatherData.forecast.forecastday[2].day.condition.icon
         }
 
-        // average rating control
-        let averageGrade = 0;
-        for (let review of rock.reviews) {
-            averageGrade += review.rating;
-        }
-        averageGrade = Math.floor(averageGrade / rock.reviews.length);
+        /*  // average rating control
+         let averageGrade = 0;
+         for (let review of rock.reviews) {
+             averageGrade += review.rating;
+         }
+         averageGrade = Math.floor(averageGrade / rock.reviews.length); */
 
-        res.render('show', { rock, forecast, averageGrade });
+        res.render('show', { rock, reviews, page, limit, forecast });
 
     } catch (e) {
         res.render('show', { rock });

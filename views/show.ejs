@@ -193,13 +193,13 @@
 
 
     <!--reviews-->
-    <div class="container">
+    <div id="reviews-container" class="container">
       <div class="row justify-content-center">
         <div class="col-md-4 text-center review-header">
           <h2>Reviews</h2>
         </div>
         <div class="row justify-content-center">
-          <% for(let review of rock.reviews) { %>
+          <% for(let review of reviews) { %>
 
           <div class="card" style="width: 18rem; border: none;">
             <div class="card-body">
@@ -218,6 +218,31 @@
 
           <% } %>
             </div>
+
+            <!--  <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="/destination/<%=rock._id%>?page=<%= page - 1 %>&limit=<%= limit %>" onclick="scrollToReviews()">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="/destination/<%=rock._id%>?page=<%= page + 1 %>&limit=<%= limit %>" onclick="scrollToReviews()">Next</a></li>
+              </ul>
+            </nav> -->
+
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center">
+                <li class="page-item">
+                  <a class="page-link" href="/destination/<%= rock._id %>?page=<%= page - 1 %>&limit=<%= limit %>">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="/destination/<%= rock._id %>?page=1>&limit=<%= limit %>">1</a></li>
+                <li class="page-item" aria-current="page"><a class="page-link" href="/destination/<%= rock._id %>?page=2>&limit=<%= limit %>">2</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="/destination/<%= rock._id %>?page=<%= page + 1 %>&limit=<%= limit %>">Next</a>
+                </li>
+              </ul>
+            </nav>
+
+
 
           </div>
         </div>
@@ -278,8 +303,6 @@
           createRouteChart(<%- JSON.stringify(rock) %>);
         </script>
         <script src="/js/table.js"></script>
-
-
 </body>
 
 </html>
