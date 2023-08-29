@@ -219,7 +219,7 @@
           <% } %>
             </div>
 
-
+            <%if (reviews.length > 8) {%>
             <nav aria-label="Page navigation">
               <ul class="pagination justify-content-center">
                 <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
@@ -232,7 +232,7 @@
                 </li>
               </ul>
             </nav>
-
+            <%}%>
 
 
           </div>
@@ -241,60 +241,60 @@
 
         <!--review form-->
         <%if (currentUser) { %>
-        <div class="container-fluid review-container">
-          <div class="container">
-            <div class="row d-flex justify-content-center">
-              <div class="col-md-6 review-header">
-                <h2>Leave a review:</h2>
+            <div class="container-fluid review-container">
+              <div class="container">
+                <div class="row d-flex justify-content-center">
+                  <div class="col-md-6 review-header">
+                    <h2>Leave a review:</h2>
+                  </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                  <div class="col-md-6">
+
+                    <form id="add-review" action="/destination/<%=rock._id%>/reviews" method="POST">
+                      <fieldset class="starability-basic">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                      </fieldset>
+
+                      <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" maxlength="1000" placeholder="Review this climbing spot" required></textarea>
+
+                      <button id="review-button" class="btn btn-sm btn-success">Submit</button>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="row d-flex justify-content-center">
-              <div class="col-md-6">
-
-                <form id="add-review" action="/destination/<%=rock._id%>/reviews" method="POST">
-                  <fieldset class="starability-basic">
-                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
-                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                    <label for="first-rate1" title="Terrible">1 star</label>
-                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                    <label for="first-rate2" title="Not good">2 stars</label>
-                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                    <label for="first-rate3" title="Average">3 stars</label>
-                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                    <label for="first-rate4" title="Very good">4 stars</label>
-                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                    <label for="first-rate5" title="Amazing">5 stars</label>
-                  </fieldset>
-
-                  <textarea class="form-control" name="review[body]" id="body" cols="30" rows="10" name="review[body]" maxlength="1000" placeholder="Review this climbing spot" required></textarea>
-
-                  <button id="review-button" class="btn btn-sm btn-success">Submit</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <%}%>
+            <%}%>
     <!------------->
  
   </main>
 
   <%- include('partials/footer') %>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-        <script>
-          const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
-          const rock = <%- JSON.stringify(rock) %>;
-        </script>
-        <script src="/js/showPageMap.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="/js/routeChart.js"></script>
-        <script>
-          // Call the createRouteChart function with the rock data
-          createRouteChart(<%- JSON.stringify(rock) %>);
-        </script>
-        <script src="/js/table.js"></script>
-        <!-- <script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+            <script>
+              const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
+              const rock = <%- JSON.stringify(rock) %>;
+            </script>
+            <script src="/js/showPageMap.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="/js/routeChart.js"></script>
+            <script>
+              // Call the createRouteChart function with the rock data
+              createRouteChart(<%- JSON.stringify(rock) %>);
+            </script>
+            <script src="/js/table.js"></script>
+            <!-- <script>
           const linkBtn = document.querySelector('#previous');
           console.log(page);
           if (page === 0) {

@@ -67,7 +67,12 @@ const store = MongoStore.create({
     }
 });
 
+store.on('error', function (e) {
+    console.log('Session Storage Error', e)
+})
+
 const sessionConfig = {
+    store,
     name: 'session_ct',
     secret: 'thiswillbeabettersecret',
     resave: false,
