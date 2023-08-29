@@ -85,7 +85,7 @@ const seedDB = async () => {
             newRock.routes.push(newRoute); // Associate the route with the rock
 
         }
-
+        console.log(newRock.name);
         await newRock.save();
     }
 

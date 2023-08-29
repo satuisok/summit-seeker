@@ -7,6 +7,12 @@ body {
     margin-bottom: 1rem;
 }
 
+#search-btn,
+#view-btn {
+    background-color: #009688;
+    border-color: #009688;
+}
+
 h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
@@ -26,10 +32,6 @@ p#star-rating.starability-result {
     padding: 0;
 }
 
-#view-btn {
-    background-color: #607D8B;
-    border-color: #607D8B;
-}
 
 
 h5 {

@@ -19,6 +19,8 @@ input {
     margin-bottom: 1rem;
 }
 
-button {
+#submit-btn {
     margin-top: 1rem;
+    background-color: #009688;
+    border-color: #009688;
 }

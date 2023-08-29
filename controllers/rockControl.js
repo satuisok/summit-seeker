@@ -80,7 +80,9 @@ module.exports.show = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
-
+    const reviewTotal = await Review.countDocuments({ rock: rock._id })
+    const totalPages = Math.ceil(reviewTotal / limit)
+    console.log(totalPages)
     const reviews = await Review.find({ rock: rock._id }).populate('author').skip(skip).limit(limit);
 
 
@@ -113,14 +115,7 @@ module.exports.show = async (req, res) => {
             dayAfterIcon: weatherData.forecast.forecastday[2].day.condition.icon
         }
 
-        /*  // average rating control
-         let averageGrade = 0;
-         for (let review of rock.reviews) {
-             averageGrade += review.rating;
-         }
-         averageGrade = Math.floor(averageGrade / rock.reviews.length); */
-
-        res.render('show', { rock, reviews, page, limit, forecast });
+        res.render('show', { rock, reviews, page, limit, totalPages, forecast });
 
     } catch (e) {
         res.render('show', { rock });
