@@ -39,8 +39,8 @@ const User = require('./models/user');
 /********* connect to MongoDB ***********/
 
 const mongoose = require('mongoose');
-const dbUrl = 'mongodb://127.0.0.1:27017/summit-seeker';
-//process.env.DB_URL
+const dbUrl = process.env.DB_URL;
+//'mongodb://127.0.0.1:27017/summit-seeker'
 async function main() {
     await mongoose.connect(dbUrl);
 }
