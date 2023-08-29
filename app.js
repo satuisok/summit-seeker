@@ -21,6 +21,7 @@ const reviewRoutes = require('./routes/reviews'); // import the review routes
 
 
 const session = require('express-session'); // express-session is used to create a session
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash'); // connect-flash is used to create flash messages
 const mongoSanitize = require('express-mongo-sanitize'); // express-mongo-sanitize is used to sanitize the user input
 const ExpressError = require('./utils/ExpressError'); // ExpressError is used to create custom error messages
@@ -38,9 +39,10 @@ const User = require('./models/user');
 /********* connect to MongoDB ***********/
 
 const mongoose = require('mongoose');
-
+const dbUrl = 'mongodb://127.0.0.1:27017/summit-seeker';
+//process.env.DB_URL
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/summit-seeker');
+    await mongoose.connect(dbUrl);
 }
 
 main()
@@ -56,6 +58,14 @@ app.set('views', path.join(__dirname, 'views')); // set the path for the views f
 app.use(express.static(path.join(__dirname, 'public'))); // set the path for the public folder
 app.use(express.urlencoded({ extended: true })); // use express.urlencoded to parse the form data
 app.use(methodOverride('_method')); // use method-override to override the POST method in the form to PUT method
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
 
 const sessionConfig = {
     name: 'session_ct',
