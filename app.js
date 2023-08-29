@@ -59,11 +59,13 @@ app.use(express.static(path.join(__dirname, 'public'))); // set the path for the
 app.use(express.urlencoded({ extended: true })); // use express.urlencoded to parse the form data
 app.use(methodOverride('_method')); // use method-override to override the POST method in the form to PUT method
 
+const secret = process.env.SECRET;
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'thisshouldbeabettersecret!'
+        secret
     }
 });
 
@@ -74,7 +76,7 @@ store.on('error', function (e) {
 const sessionConfig = {
     store,
     name: 'session_ct',
-    secret: 'thiswillbeabettersecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
