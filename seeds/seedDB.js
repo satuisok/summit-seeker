@@ -1,4 +1,9 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const mongoose = require("mongoose");
+const dbUrl = process.env.DB_URL;
 const Rock = require("../models/rocks");
 const Review = require("../models/reviews");
 const Route = require("../models/routes");
@@ -13,8 +18,10 @@ const images = require("./images");
 
 /********* connect to MongoDB ***********/
 
+//'mongodb://127.0.0.1:27017/summit-seeker'
+
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/summit-seeker');
+    await mongoose.connect(dbUrl);
 }
 
 main()
@@ -54,7 +61,7 @@ const seedDB = async () => {
                 },
             ],
             description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus iure sit iusto nisi recusandae saepe obcaecati laudantium reprehenderit assumenda similique, exercitationem, iste, ipsa corporis porro aliquid optio maxime unde debitis. Nihil repellat modi unde molestiae assumenda alias quia deserunt fuga quo, laborum qui corrupti sunt voluptate repudiandae labore deleniti harum facere voluptatum iusto vitae odio dolores? In neque esse quam!",
-            author: "646dd32232a233dac9a5b8b0",
+            author: "64edd489a218fe962245a0fb",
             geometry: {
                 type: "Point",
                 coordinates: [
@@ -76,7 +83,7 @@ const seedDB = async () => {
                 types: randomType[Math.floor(Math.random() * randomType.length)],
                 pitches: Math.floor(Math.random() * 10),
                 description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-                creator: "646dd32232a233dac9a5b8b0"
+                creator: "64edd489a218fe962245a0fb"
             });
 
             newRoute.rock = newRock;  // Associate the route with the rock 

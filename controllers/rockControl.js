@@ -84,7 +84,7 @@ module.exports.show = async (req, res) => {
     const totalPages = Math.ceil(reviewTotal / limit)
     console.log(totalPages)
     const reviews = await Review.find({ rock: rock._id }).populate('author').skip(skip).limit(limit);
-
+    console.log(reviewTotal);
 
 
 
@@ -115,7 +115,7 @@ module.exports.show = async (req, res) => {
             dayAfterIcon: weatherData.forecast.forecastday[2].day.condition.icon
         }
 
-        res.render('show', { rock, reviews, page, limit, totalPages, forecast });
+        res.render('show', { rock, reviews, page, limit, totalPages, reviewTotal, forecast });
 
     } catch (e) {
         res.render('show', { rock });
